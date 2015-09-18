@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">无秘</string>
+    <string name="app_name">圈乐</string>
     <string name="tabbed_tab_login">登录</string>
     <string name="tabbed_tab_register">注册</string>
     <string name="tabbed_tab_subtitle_log_in">登陆查看来自好友的照片和视频</string>
