@@ -66,6 +66,7 @@ public class CommentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_list);
         poId = getIntent().getLongExtra(PARAM_PO_ID, -1);
+        addBack();
         mAdapter = new CommentAdapter(this, new ArrayList<CommentItem>());
         editText = (EditText) findViewById(R.id.comment);
         mShareBtn = (TextView) findViewById(R.id.direct_private_share_action_button);
@@ -199,7 +200,9 @@ public class CommentActivity extends BaseActivity {
                         footer.pushLoadMore();
                     }
                 }
-
+                if(mAdapter.getCount()==0){
+                    findViewById(R.id.empty).setVisibility(View.VISIBLE);
+                }else findViewById(R.id.empty).setVisibility(View.GONE);
             }
         }, new Response.ErrorListener() {
             @Override

@@ -1,7 +1,9 @@
 package com.android.msx7.followinstagram.activity;
 
 import android.content.Intent;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Spanned;
@@ -33,6 +35,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,16 +59,11 @@ public class ShareImageActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_push_img);
+        addBack();
         shareImg = (ImageView) findViewById(R.id.img);
         address1 = (TextView) findViewById(R.id.address1);
-//        findViewById(R.id.action_bar_button_back).setBackgroundDrawable(new BackActionButtonDrawable(getResources(), false));
         path = getIntent().getStringExtra(PARAM_IMG_PATH);
-//        findViewById(R.id.action_bar_button_back).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onBackPressed();
-//            }
-//        });
+
         IMApplication.getApplication().displayImage(Uri.fromFile(new File(path)).toString(), shareImg);
         findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +90,7 @@ public class ShareImageActivity extends BaseActivity {
                         (IMApplication.getApplication().location.getLongitude() == Double.MAX_VALUE && IMApplication.getApplication().location.getLatitude() == Double.MAX_VALUE) ||
                         (IMApplication.getApplication().location.getLongitude() == Double.MIN_VALUE && IMApplication.getApplication().location.getLatitude() == Double.MIN_VALUE)) {
                     ToastUtil.show("定位失败，请稍后重新尝试");
+                    return;
                 }
                 Intent intent = new Intent(ShareImageActivity.this, AddressActvity.class);
                 intent.putExtra(AddressActvity.PARAM_LAT, IMApplication.getApplication().location.getLatitude());
@@ -186,6 +185,12 @@ public class ShareImageActivity extends BaseActivity {
         map.put("img_url", pair.second);
         if (quanList != null && !quanList.isEmpty())
             map.put("guys", quanList);
+        if (new File(path).exists()) {
+            HashMap<String, Object> map3 = new HashMap<String, Object>();
+            map3.put("i_take_time", new File(path).lastModified());
+            map3.put("device", Build.MODEL);
+            map.put("exif", getExif());
+        }
         List list = new ArrayList();
         list.add(map);
         HashMap<String, Object> map2 = new HashMap<String, Object>();
@@ -199,6 +204,7 @@ public class ShareImageActivity extends BaseActivity {
             map2.put("f_loc_lat", "" + IMApplication.getApplication().location.getLatitude());
             map2.put("f_loc_lng", "" + IMApplication.getApplication().location.getLongitude());
         }
+
         if (mAddressLocation != null) {
             /**
              *     _item['j_loc_info'] = {'loc_id':1, 'addr':'上海 滨江森林公园'}
@@ -231,6 +237,62 @@ public class ShareImageActivity extends BaseActivity {
                 VolleyErrorUtils.showError(error);
             }
         }));
+    }
+
+    HashMap<String, String> getExif() {
+        HashMap<String, String> map = new HashMap<String, String>();
+
+        /**
+         * 　TAG_APERTURE：光圈值。
+         　　TAG_DATETIME：拍摄时间，取决于设备设置的时间。
+         　　TAG_EXPOSURE_TIME：曝光时间。
+         　　TAG_FLASH：闪光灯。
+         　　TAG_FOCAL_LENGTH：焦距。
+         　　TAG_IMAGE_LENGTH：图片高度。
+         　　TAG_IMAGE_WIDTH：图片宽度。
+         　　TAG_ISO：ISO。
+         　　TAG_MAKE：设备品牌。
+         　　TAG_MODEL：设备型号，整形表示，在ExifInterface中有常量对应表示。
+         　　TAG_ORIENTATION：旋转角度，整形表示，在ExifInterface中有常量对应表示。
+         TAG_GPS_LATITUDE  TAG_GPS_LONGITUDE
+         */
+        try {
+            L.d(path);
+            ExifInterface exifInterface = new ExifInterface(path);
+            String APERTURE = exifInterface.getAttribute(ExifInterface.TAG_APERTURE);
+            if (!TextUtils.isEmpty(APERTURE)) map.put("APERTURE", APERTURE);
+            String DATETIME = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);
+            if (!TextUtils.isEmpty(DATETIME)) map.put("DATETIME", DATETIME);
+            String EXPOSURE_TIME = exifInterface.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
+            if (!TextUtils.isEmpty(EXPOSURE_TIME)) map.put("EXPOSURE_TIME", EXPOSURE_TIME);
+            String FLASH = exifInterface.getAttribute(ExifInterface.TAG_FLASH);
+            if (!TextUtils.isEmpty(FLASH)) map.put("FLASH", FLASH);
+            String FOCAL_LENGTH = exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH);
+            if (!TextUtils.isEmpty(FOCAL_LENGTH)) map.put("FOCAL_LENGTH", FOCAL_LENGTH);
+            String IMAGE_LENGTH = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH);
+            if (!TextUtils.isEmpty(IMAGE_LENGTH)) map.put("IMAGE_LENGTH", IMAGE_LENGTH);
+            String IMAGE_WIDTH = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH);
+            if (!TextUtils.isEmpty(IMAGE_WIDTH)) map.put("IMAGE_WIDTH", IMAGE_WIDTH);
+            String ISO = exifInterface.getAttribute(ExifInterface.TAG_ISO);
+            if (!TextUtils.isEmpty(ISO)) map.put("ISO", ISO);
+            String MAKE = exifInterface.getAttribute(ExifInterface.TAG_MAKE);
+            if (!TextUtils.isEmpty(MAKE)) map.put("MAKE", MAKE);
+            String MODEL = exifInterface.getAttribute(ExifInterface.TAG_MODEL);
+            if (!TextUtils.isEmpty(MODEL)) map.put("MODEL", MODEL);
+            String ORIENTATION = exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION);
+            if (!TextUtils.isEmpty(ORIENTATION)) map.put("ORIENTATION", ORIENTATION);
+            String WHITE_BALANCE = exifInterface.getAttribute(ExifInterface.TAG_WHITE_BALANCE);
+            if (!TextUtils.isEmpty(WHITE_BALANCE)) map.put("WHITE_BALANCE", WHITE_BALANCE);
+
+            String GPS_LATITUDE = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            if (!TextUtils.isEmpty(ORIENTATION)) map.put("GPS_LATITUDE", GPS_LATITUDE);
+            String GPS_LONGITUDE = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            if (!TextUtils.isEmpty(GPS_LONGITUDE)) map.put("GPS_LONGITUDE", GPS_LONGITUDE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+        }
+        return map;
     }
 
     @Override

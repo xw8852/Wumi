@@ -1,4 +1,4 @@
-package com.android.msx7.followinstagram.Fragment;
+package com.android.msx7.followinstagram.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.msx7.followinstagram.Fragment.FollowListFragment.FollowBean;
+import com.android.msx7.followinstagram.fragment.FollowListFragment.FollowBean;
 import com.android.msx7.followinstagram.IMApplication;
 import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.activity.MainTabActivity;
@@ -63,6 +63,7 @@ public class FansListFragment extends BaseFragment {
         if (getArguments() != null) {
             userId = getArguments().getLong(PARAM_USER_ID);
         }
+        addBack();
         mListView = (ListView) getView().findViewById(R.id.list);
         header = new PushHeader(mListView, refreshListener);
         mAdapter = new FollowAdapter(getView().getContext(), new ArrayList<FollowBean>());

@@ -1,4 +1,4 @@
-package com.android.msx7.followinstagram.Fragment;
+package com.android.msx7.followinstagram.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -61,6 +61,7 @@ public class FollowListFragment extends BaseFragment {
         if (getArguments() != null) {
             userId = getArguments().getLong(PARAM_USER_ID);
         }
+        addBack();
         mListView = (ListView) getView().findViewById(R.id.list);
         header = new PushHeader(mListView, refreshListener);
         mAdapter = new FollowAdapter(getView().getContext(), new ArrayList<FollowBean>());

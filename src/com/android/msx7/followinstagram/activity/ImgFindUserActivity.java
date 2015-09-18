@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -65,10 +66,10 @@ import java.util.List;
  */
 public class ImgFindUserActivity extends BaseActivity {
     public static final String PARAM_PATH = "param_path";
-    HandlerThread detectThread = null;
-    Handler detectHandler = null;
-    FaceDetecter detecter = null;
-    HttpRequests request = null;// 在线api
+    //    HandlerThread detectThread = null;
+//    Handler detectHandler = null;
+//    FaceDetecter detecter = null;
+//    HttpRequests request = null;// 在线api
     String path;
     ImageView img;
     FrameLayout frameLayout;
@@ -82,14 +83,15 @@ public class ImgFindUserActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_face);
+        addBack();
         img = (ImageView) findViewById(R.id.img);
         frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
         path = getIntent().getStringExtra(PARAM_PATH);
-        detectThread = new HandlerThread("detect");
-        detectThread.start();
-        detectHandler = new Handler(detectThread.getLooper());
-        detecter = new FaceDetecter();
-        detecter.init(this, "54662625acbadb3c5b395cd2d39c98d9");
+//        detectThread = new HandlerThread("detect");
+//        detectThread.start();
+//        detectHandler = new Handler(detectThread.getLooper());
+//        detecter = new FaceDetecter();
+//        detecter.init(this, "54662625acbadb3c5b395cd2d39c98d9");
         IMApplication.getApplication().displayImage(Uri.fromFile(new File(path)).toString(), img, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
@@ -153,7 +155,7 @@ public class ImgFindUserActivity extends BaseActivity {
                 mAdapter.changeData(findName(s.toString()));
             }
         });
-        getTitleBar().setTitle("圈人",null);
+        getTitleBar().setTitle("圈人", null);
         mAdapter = new SimpleAdapter(this, new ArrayList<SimpleContact>());
         listView = (ListView) findViewById(R.id.list);
         listView.setAdapter(mAdapter);
@@ -165,7 +167,7 @@ public class ImgFindUserActivity extends BaseActivity {
             }
         });
 
-        getTitleBar().setRightBtn("确定",new View.OnClickListener() {
+        getTitleBar().setRightBtn("确定", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 List<SimpleContact> arrs = new ArrayList<SimpleContact>();
@@ -175,7 +177,7 @@ public class ImgFindUserActivity extends BaseActivity {
                     if (_tmp instanceof Tag) {
                         Tag _tag = (Tag) _tmp;
                         SimpleContact contact = _tag.simpleContact;
-                        contact.position = bitmapWidth /( _tag.getX()) + "ABCD" + bitmapHeight /( _tag.getY()-img.getTop());
+                        contact.position = bitmapWidth / (_tag.getX()) + "ABCD" + bitmapHeight / (_tag.getY() - img.getTop());
                         arrs.add(contact);
                     }
                 }
@@ -262,29 +264,57 @@ public class ImgFindUserActivity extends BaseActivity {
 
     public void findFace(final Bitmap bitmap) {
         L.d("---findFace----");
-        detectHandler.post(new Runnable() {
-
+        final GestureDetector mGestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
-            public void run() {
-                L.d("---findFace---detectHandler---");
-                Face[] faceinfo = detecter.findFaces(bitmap);// 进行人脸检测
-                L.d("---findFace---faceinfo---");
-                if (faceinfo == null) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(ImgFindUserActivity.this, "未发现人脸信息", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                    return;
+            public boolean onSingleTapUp(MotionEvent e) {
+                if (frameLayout.getChildCount() < 5) {
+                    Tag tag = new Tag(ImgFindUserActivity.this);
+                    ViewUtils.measureView(tag);
+                    int width = tag.getMeasuredWidth();
+                    FrameLayout.LayoutParams layout = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layout.leftMargin = (int) e.getX();
+                    if (layout.leftMargin + width > getResources().getDisplayMetrics().widthPixels) {
+                        layout.leftMargin = getResources().getDisplayMetrics().widthPixels - width;
+                    }
+                    layout.topMargin = (int) e.getY()+img.getTop();
+                    tag.setLayoutParams(layout);
+                    tag.setVisibility(View.VISIBLE);
+                    frameLayout.addView(tag);
                 }
-                L.d("MSG--" + new Gson().toJson(faceinfo));
-                Message msg = new Message();
-                msg.what = 100;
-                msg.obj = faceinfo;
-                handler.sendMessage(msg);
+                return true;
             }
         });
+        img.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mGestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
+
+//        detectHandler.post(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                L.d("---findFace---detectHandler---");
+//                Face[] faceinfo = detecter.findFaces(bitmap);// 进行人脸检测
+//                L.d("---findFace---faceinfo---");
+//                if (faceinfo == null) {
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(ImgFindUserActivity.this, "未发现人脸信息", Toast.LENGTH_LONG).show();
+//                        }
+//                    });
+//                    return;
+//                }
+//                L.d("MSG--" + new Gson().toJson(faceinfo));
+//                Message msg = new Message();
+//                msg.what = 100;
+//                msg.obj = faceinfo;
+//                handler.sendMessage(msg);
+//            }
+//        });
     }
 
     Handler handler = new Handler() {

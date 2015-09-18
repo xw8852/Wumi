@@ -1,4 +1,4 @@
-package com.android.msx7.followinstagram.Fragment;
+package com.android.msx7.followinstagram.fragment;
 
 import android.content.Intent;
 import android.graphics.Paint;
@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 
-import com.android.msx7.followinstagram.Fragment.TabHomeFragment.HomeItem;
-import com.android.msx7.followinstagram.Fragment.TabHomeFragment.ZanItem;
+import com.android.msx7.followinstagram.fragment.TabHomeFragment.HomeItem;
+import com.android.msx7.followinstagram.fragment.TabHomeFragment.ZanItem;
 import com.android.msx7.followinstagram.IMApplication;
 import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.activity.CommentActivity;
@@ -70,6 +70,7 @@ public class SinglePoFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        addBack();
         getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

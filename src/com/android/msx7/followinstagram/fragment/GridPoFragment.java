@@ -1,4 +1,4 @@
-package com.android.msx7.followinstagram.Fragment;
+package com.android.msx7.followinstagram.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -62,6 +62,7 @@ public class GridPoFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        addBack();
         if (getArguments() != null) {
             userId = getArguments().getLong(PARAM_USER_ID);
         } else {
@@ -171,6 +172,9 @@ public class GridPoFragment extends BaseFragment {
                     if (result.retcode != 0)
                         ToastUtil.show(result.showmsg);
                     else mAdapter.changeData(result.retbody);
+                    if(mAdapter.getCount()==0){
+                        getView().findViewById(R.id.empty).setVisibility(View.VISIBLE);
+                    }else getView().findViewById(R.id.empty).setVisibility(View.GONE);
                     handler.sendEmptyMessageDelayed(0, 1000);
                 }
             }, new Response.ErrorListener() {

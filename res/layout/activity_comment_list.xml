@@ -6,7 +6,10 @@
     android:orientation="vertical">
 
     <include layout="@layout/title_bar" />
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
     <ListView
         android:layout_width="match_parent"
         android:layout_weight="1"
@@ -19,22 +22,15 @@
         android:headerDividersEnabled="false"
         android:dividerHeight="0.5dp"
         android:layout_height="match_parent"></ListView>
-    <com.fortysevendeg.swipelistview.SwipeListView
-        android:id="@+id/swipeListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:listSelector="#00000000"
-        swipe:swipeActionLeft="reveal"
-        swipe:swipeActionRight="reveal"
-        swipe:swipeAnimationTime="@integer/config_activityDefaultDur"
-        swipe:swipeBackView="@+id/back"
-        swipe:swipeMode="none"
-        android:visibility="gone"
-        swipe:swipeOffsetLeft="200dp"
-        swipe:swipeFrontView="@+id/font">
-        <requestFocus/>
-        </com.fortysevendeg.swipelistview.SwipeListView>
+        <TextView
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="暂无评论"
+            android:id="@+id/empty"
+            android:visibility="gone"
+            android:textSize="@dimen/font_xlarge"
+            android:layout_height="match_parent" />
+    </FrameLayout>
     <!--
      swipe:swipeActionLeft="[reveal | dismiss]"
         swipe:swipeActionRight="[reveal | dismiss]"

@@ -5,7 +5,7 @@ import android.text.TextPaint;
 import android.text.style.URLSpan;
 import android.view.View;
 
-import com.android.msx7.followinstagram.Fragment.TabProfileFragment;
+import com.android.msx7.followinstagram.fragment.TabProfileFragment;
 import com.android.msx7.followinstagram.IMApplication;
 import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.activity.MainTabActivity;

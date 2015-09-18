@@ -1,4 +1,4 @@
-package com.android.msx7.followinstagram.Fragment;
+package com.android.msx7.followinstagram.fragment;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
@@ -91,10 +91,12 @@ public class TabHomeFragment extends BaseFragment {
         if (getArguments() != null && getArguments().containsKey(PARAM_TAG)) {
             tag = getArguments().getString(PARAM_TAG);
             getTitleBar().setTitle(tag, null);
+            addBack();
         }
         if (getArguments() != null && getArguments().containsKey(PARAM_ADRESS)) {
             addressId = getArguments().getLong(PARAM_ADRESS);
             getTitleBar().setTitle(getArguments().getString(PARAM_ADRESS_NAME), null);
+            addBack();
         }
         listView = (PinnedHeaderListView) getView().findViewById(R.id.pinListView);
         View _view = getView().findViewById(R.id.pin_header);
@@ -450,6 +452,7 @@ public class TabHomeFragment extends BaseFragment {
                 bundle.putString(TabProfileFragment.PARAM_USER_NAME, name);
                 fragment.setArguments(bundle);
                 activity.addFragmentToBackStack(fragment);
+
             } else
                 L.d("-----widget--" + name + "," + id);
         }

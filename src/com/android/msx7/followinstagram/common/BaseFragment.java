@@ -1,5 +1,6 @@
 package com.android.msx7.followinstagram.common;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -21,6 +22,18 @@ public class BaseFragment extends Fragment {
 
     public TitleView getTitleBar() {
         return (TitleView) getView().findViewById(R.id.TitleBar);
+    }
+
+    public void addBack() {
+        TitleView titleBar = getTitleBar();
+        if (titleBar == null) return;
+        titleBar.setLeftImg(R.drawable.nav_arrow_back, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((Activity) v.getContext()).onBackPressed();
+            }
+        });
+
     }
 
     @Override

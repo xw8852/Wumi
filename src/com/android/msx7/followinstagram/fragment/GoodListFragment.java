@@ -1,4 +1,4 @@
-package com.android.msx7.followinstagram.Fragment;
+package com.android.msx7.followinstagram.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -52,6 +52,7 @@ public class GoodListFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        addBack();
         poId = getArguments().getLong(PARAM_PO_ID);
         mListView = (ListView) getView().findViewById(R.id.list);
         header = new PushHeader(mListView, listener);

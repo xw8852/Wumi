@@ -1,4 +1,4 @@
-package com.android.msx7.followinstagram.Fragment;
+package com.android.msx7.followinstagram.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +16,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.msx7.followinstagram.Fragment.TabHomeFragment.HomeItem;
+import com.android.msx7.followinstagram.fragment.TabHomeFragment.HomeItem;
 import com.android.msx7.followinstagram.IMApplication;
 import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.activity.EditUserActivity;
@@ -82,6 +82,7 @@ public class TabProfileFragment extends BaseFragment {
         if (getArguments() != null) {
             userId = getArguments().getLong(PARAM_USER_ID);
             userName = getArguments().getString(PARAM_USER_NAME);
+            addBack();
         } else {
             userId = IMApplication.getApplication().getUserInfo().userId;
             userName = IMApplication.getApplication().getUserInfo().userName;
@@ -157,7 +158,8 @@ public class TabProfileFragment extends BaseFragment {
         });
         edit = getView().findViewById(R.id.edit);
         follow = (Button) getView().findViewById(R.id.btn_follow);
-        if (userId < 0 || userId != IMApplication.getApplication().getUserInfo().userId) {
+        boolean isme = (userId == IMApplication.getApplication().getUserInfo().userId) | (IMApplication.getApplication().getUserInfo().userName.equals(userName));
+        if (!isme) {
             edit.setVisibility(View.GONE);
             follow.setVisibility(View.VISIBLE);
         }

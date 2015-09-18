@@ -81,3 +81,8 @@ allprojects {
         jcenter()
     }
 }
+android {
+    lintOptions {
+        abortOnError false
+    }
+}

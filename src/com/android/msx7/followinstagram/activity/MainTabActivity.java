@@ -1,5 +1,6 @@
 package com.android.msx7.followinstagram.activity;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -12,14 +13,17 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.android.db.DatabaseConfig;
-import com.android.msx7.followinstagram.Fragment.TabHomeFragment;
-import com.android.msx7.followinstagram.Fragment.TabNewsFragment;
-import com.android.msx7.followinstagram.Fragment.TabProfileFragment;
+import com.android.layoutlib.bridge.bars.TitleBar;
+import com.android.msx7.followinstagram.common.BaseFragment;
+import com.android.msx7.followinstagram.fragment.TabHomeFragment;
+import com.android.msx7.followinstagram.fragment.TabNewsFragment;
+import com.android.msx7.followinstagram.fragment.TabProfileFragment;
 import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.common.DBConn;
 import com.android.msx7.followinstagram.ui.drawable.DockDrawable;
 import com.android.msx7.followinstagram.util.L;
 import com.android.msx7.followinstagram.util.ToastUtil;
+import com.android.widget.TitleView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -122,8 +126,10 @@ public class MainTabActivity extends ImageSelectActivity implements View.OnClick
             newsTags.add(popName);
             ft.add(R.id.tab_news_container, fragment);
         }
+        ft.hide(mCurFragment);
         ft.addToBackStack(popName);
         ft.commitAllowingStateLoss();
+        mCurFragment = fragment;
     }
 
     @Override

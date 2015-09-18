@@ -6,7 +6,9 @@
     android:orientation="vertical">
 
     <include layout="@layout/title_bar" />
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -33,4 +35,13 @@
             android:src="@drawable/progress_medium_holo"
             android:layout_height="wrap_content" />
     </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="暂无照片"
+            android:id="@+id/empty"
+            android:visibility="gone"
+            android:textSize="@dimen/font_xlarge"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 </LinearLayout>

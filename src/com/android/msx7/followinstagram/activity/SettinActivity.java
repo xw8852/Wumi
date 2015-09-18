@@ -21,6 +21,7 @@ public class SettinActivity extends BaseActivity {
         setContentView(R.layout.activity_setting);
         getTitleBar().setTitle("设置", null);
         button = (Button) findViewById(R.id.logout);
+        addBack();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

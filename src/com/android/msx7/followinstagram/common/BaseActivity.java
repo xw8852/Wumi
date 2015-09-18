@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.android.layoutlib.bridge.bars.TitleBar;
@@ -22,7 +23,17 @@ public class BaseActivity extends Activity {
     public TitleView getTitleBar() {
         return (TitleView) findViewById(R.id.TitleBar);
     }
+    public void addBack() {
+        TitleView titleBar = getTitleBar();
+        if (titleBar == null) return;
+        titleBar.setLeftImg(R.drawable.nav_arrow_back, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((Activity) v.getContext()).onBackPressed();
+            }
+        });
 
+    }
     /**
      * showLoadingDialog:显示数据加载框. <br/>
      */
