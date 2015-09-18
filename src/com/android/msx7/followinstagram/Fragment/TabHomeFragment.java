@@ -231,7 +231,7 @@ public class TabHomeFragment extends BaseFragment {
             application.displayImage(item.userInfo.userImg, headerHolder.userImg);
             headerHolder.userName.setText(item.userInfo.userName);
             headerHolder.userTime.setText(DateUtils.getActivityTime(item.creatTime));
-            header.setOnClickListener(new NameListener(item.userInfo.userName, item.userInfo.userId));
+            header.setOnClickListener(new NameListener(item.userInfo.userName, item.userInfo.uid));
         }
 
         public void update(HomeItem item, int position) {
