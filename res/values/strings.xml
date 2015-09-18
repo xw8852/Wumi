@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">无秘</string>
+    <string name="tabbed_tab_login">登录</string>
+    <string name="tabbed_tab_register">注册</string>
+    <string name="tabbed_tab_subtitle_log_in">登陆查看来自好友的照片和视频</string>
+    <string name="tabbed_tab_subtitle_sign_up">注册查看好友发的照片和视频</string>
+    <string name="username">用户名</string>
+    <string name="introduce">简介</string>
+    <string name="password">密码</string>
+    <string name="forgot">忘记密码?</string>
+    <string name="tabble_log_in_next_page">下一页</string>
+    <string name="tabbed_new_reg_email_hint">输入电子邮箱</string>
+    <string name="tabbed_reg_phone_hint">手机号码</string>
+    <string name="tabbed_reg_password_hint">设置密码</string>
+    <string name="tabbed_reg_btn">注册</string>
+    <string name="tabbed_reg_btn_submit">提交</string>
+    <string name="tabbed_reg_tips">「无秘」需通过手机号码识别你的朋友\n才能展示他们的秘密</string>
+    <string name="tabbed_reg_deal">使用协议</string>
+    <string name="version_unknown">未知版本</string>
+
+    <string name="reg_phone_empty">手机号码不能为空</string>
+    <string name="reg_phone_invalid">手机号有误</string>
+    <string name="reg_password_not_full">密码不能低于6位</string>
+    <string name="reg_password_none">密码不能为空</string>
+    <string name="verify_reg_phone_tips">本次注册需要短信验证,已发送验证码至</string>
+    <string name="reg_verify_send_success">短信验证码发送成功</string>
+    <string name="reg_success">注册成功</string>
+    <string name="reset_password_success">修改密码成功</string>
+    <string name="log_in_success">登陆成功</string>
+    <string name="update_user_info_success">更新用户资料成功</string>
+    <string name="toast_sd_error">sd卡目前不可用</string>
+
+    <string name="net_error">当前网络连接不可用,请开启网络后重新尝试!</string>
+    <string name="error">网络异常,请稍后重新尝试!</string>
+    <string name="direct_send">发送</string>
+    <string name="gofollow">+关注</string>
+    <string name="byfollow">√已关注</string>
+</resources>

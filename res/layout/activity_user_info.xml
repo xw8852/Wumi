@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+  <include layout="@layout/title_bar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/row_height_small"
+            android:layout_alignBottom="@+id/img"
+            android:layout_toLeftOf="@+id/img"
+            android:background="@null"
+            android:hint="@string/username"
+            android:visibility="visible" />
+
+        <com.android.msx7.followinstagram.ui.image.CircleImageView
+            android:id="@+id/img"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
+            android:src="@drawable/profile_anonymous_user" />
+    </RelativeLayout>
+
+    <include layout="@layout/row_divider" />
+
+    <TextView
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small"
+        android:gravity="center_vertical"
+        android:hint="@string/tabbed_reg_phone_hint"
+        android:paddingLeft="@dimen/row_text_padding"
+        android:paddingRight="@dimen/row_text_padding" />
+
+    <include layout="@layout/row_divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/row_text_padding"
+            android:paddingRight="@dimen/row_text_padding"
+            android:text="性别" />
+
+        <RadioGroup
+            android:id="@+id/sex"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/boy"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/row_padding"
+                android:button="@drawable/radio_check"
+                android:checked="true"
+                android:gravity="center"
+                android:paddingLeft="@dimen/row_text_button_padding"
+                android:text="男" />
+
+            <RadioButton
+                android:id="@+id/girl"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/row_padding"
+                android:button="@drawable/radio_check"
+                android:checked="false"
+                android:gravity="center"
+                android:paddingLeft="@dimen/row_text_button_padding"
+                android:text="女" />
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <include layout="@layout/row_divider" />
+
+    <EditText
+        android:id="@+id/introduce"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="@string/introduce"
+        android:minHeight="@dimen/row_height"
+        android:visibility="visible" />
+
+    <include layout="@layout/row_divider" />
+</LinearLayout>

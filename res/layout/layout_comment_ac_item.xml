@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:visibility="gone"
+        android:gravity="right|center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/row_height_small"
+            android:layout_height="match_parent"
+            android:background="@color/grey_8"
+            android:paddingLeft="@dimen/row_text_padding"
+            android:paddingRight="@dimen/row_text_padding"
+            android:scaleType="center"
+            android:src="@drawable/reply" />
+
+        <ImageView
+            android:layout_width="@dimen/row_height_small"
+            android:layout_height="match_parent"
+            android:background="@color/red_5"
+            android:paddingLeft="@dimen/row_text_padding"
+            android:paddingRight="@dimen/row_text_padding"
+            android:scaleType="center"
+            android:src="@drawable/delete" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/font"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/row_text_button_padding">
+
+        <com.android.msx7.followinstagram.ui.image.CircleImageView
+            android:id="@+id/profileImg"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/profile_anonymous_user" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/row_text_padding"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume
+                android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_3" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

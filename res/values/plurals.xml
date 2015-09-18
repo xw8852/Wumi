@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_bar_title_divider">|&#160;&#160;&#160;%1$s</string>
+    <string name="profile_po">%1$d\n帖子</string>
+    <string name="profile_fans">%1$d\n粉丝</string>
+    <string name="profile_follow">%1$d\n关注</string>
+    <string name="comments">全部 %1$d 评论</string>
+</resources>

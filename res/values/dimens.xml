@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_width">48.0dip</dimen>
+    <dimen name="button_corner_radius">2.0dip</dimen>
+    <dimen name="button_border_stroke">1.0dip</dimen>
+    <dimen name="dialog_corner_radius">4.0dip</dimen>
+    <dimen name="row_height">64.0dip</dimen>
+    <dimen name="row_height_small">48.0dip</dimen>
+    <dimen name="row_padding">16.0dip</dimen>
+    <dimen name="row_text_padding">12.0dip</dimen>
+    <dimen name="row_text_button_padding">6.0dip</dimen>
+    <dimen name="column_padding">4.0dip</dimen>
+    <dimen name="action_bar_height">48.0dip</dimen>
+    <item type="dimen" name="action_bar_button_width">@dimen/action_bar_height</item>
+    <dimen name="action_bar_item_padding">12.0dip</dimen>
+    <dimen name="action_bar_search_padding">16.0dip</dimen>
+    <dimen name="action_bar_title_left_padding">13.0dip</dimen>
+</resources>

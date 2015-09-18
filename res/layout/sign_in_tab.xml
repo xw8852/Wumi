@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal">
+
+        <com.android.msx7.followinstagram.ui.text.ContryCodeTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/row_text_padding"
+            android:paddingRight="@dimen/row_text_padding"
+            android:text="中国 +86"
+            android:textColor="@color/accent_blue_medium" />
+
+
+        <EditText
+            android:id="@+id/userphone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="left|center_vertical"
+            android:hint="@string/tabbed_reg_phone_hint"
+            android:inputType="phone"
+            android:singleLine="true"
+            android:textSize="@dimen/font_medium" />
+    </LinearLayout>
+
+    <include layout="@layout/row_divider" />
+
+    <EditText
+        android:id="@+id/userpassword"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small"
+        android:background="@null"
+        android:gravity="left|center_vertical"
+        android:hint="@string/tabbed_reg_password_hint"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword"
+        android:textSize="@dimen/font_medium" />
+
+    <include layout="@layout/row_divider" />
+
+    <TextView
+        android:id="@+id/next"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small"
+        android:gravity="center"
+        android:text="@string/tabbed_reg_btn"
+        android:textColor="@color/accent_blue_medium" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+
+        android:text="@string/tabbed_reg_tips" />
+    >
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom|center_horizontal"
+        android:text="@string/tabbed_reg_deal"
+        android:layout_marginBottom="@dimen/row_padding"
+        android:textColor="@color/accent_blue_medium" />
+
+</FrameLayout>
+
+
+</LinearLayout>

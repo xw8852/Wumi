@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+
+    android:orientation="horizontal"
+    android:padding="@dimen/row_text_button_padding">
+
+    <com.android.msx7.followinstagram.ui.image.CircleImageView
+        android:layout_width="36dp"
+        android:layout_height="match_parent"
+        android:id="@+id/userImg"
+        android:src="@drawable/profile_anonymous_user" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginLeft="@dimen/row_text_button_padding"
+        android:id="@+id/username"
+        android:textColor="@color/accent_blue_medium"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
+</LinearLayout>

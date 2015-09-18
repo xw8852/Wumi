@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.msx7.followinstagram.ui.RegistrationLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical">
+
+    <com.android.msx7.followinstagram.ui.LandingRotatingBackgroundView
+        android:id="@+id/landingRotatingBackgroundView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/tabbed_landing_logo_and_icon_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/tabbed_landing_icon"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="12.0dp"
+                android:paddingTop="12.0dp"
+                android:src="@drawable/reg_name"
+                android:visibility="invisible" />
+
+            <LinearLayout
+                android:id="@+id/tabbed_landing_logo_container"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="vertical">
+
+                <com.android.msx7.followinstagram.ui.TabbedLandingLogoView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp" />
+
+                <TextView
+                    android:id="@+id/tabbed_landing_caption"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:visibility="invisible"
+                    android:text="@string/tabbed_tab_subtitle_log_in"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/tabbed_landing_tab_header"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/row_height_small"
+            android:orientation="horizontal">
+
+            <com.android.msx7.followinstagram.ui.TabbedTab
+                android:id="@+id/tabbed_landing_sign_up"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:text="@string/tabbed_tab_register" />
+
+            <com.android.msx7.followinstagram.ui.TabbedTab
+                android:id="@+id/tabbed_landing_log_in"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:text="@string/tabbed_tab_login" />
+
+        </LinearLayout>
+
+
+        -
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0"
+            android:background="@color/white"
+            android:paddingLeft="@dimen/row_padding"
+            android:paddingRight="@dimen/row_padding">
+
+            <FrameLayout
+                android:id="@+id/sign_up_tab_container"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <FrameLayout
+                android:id="@+id/log_in_tab_container"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+        </FrameLayout>
+    </LinearLayout>
+</com.android.msx7.followinstagram.ui.RegistrationLayout>

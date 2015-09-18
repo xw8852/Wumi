@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_pinned_item"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/row_text_button_padding">
+
+    <include
+        android:id="@+id/pin_header"
+        layout="@layout/layout_home_pinned_header" />
+
+    <com.android.msx7.followinstagram.ui.image.ContactImageView
+        android:id="@+id/ContactImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="200dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp">
+
+        <ImageView
+            android:id="@+id/good"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/row_text_padding"
+            android:src="@drawable/feed_button_like" />
+
+        <ImageView
+            android:id="@+id/comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/row_text_padding"
+            android:src="@drawable/feed_button_comment" />
+    </LinearLayout>
+
+    <com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/row_text_padding"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp" />
+
+    <TextView
+        android:id="@+id/goods"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/feed_like_small"
+        android:drawablePadding="@dimen/row_text_button_padding"
+        android:paddingBottom="3dp"
+        android:paddingLeft="6dp"
+        android:paddingTop="3dp" />
+
+    <com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume
+        android:id="@+id/goodNames"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/feed_like_small"
+        android:drawablePadding="@dimen/row_text_button_padding"
+        android:paddingBottom="3dp"
+        android:paddingLeft="6dp"
+        android:paddingTop="3dp"
+        android:visibility="gone" />
+
+    <com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume
+        android:id="@+id/desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="3dp"
+        android:paddingLeft="@dimen/row_text_padding"
+        android:paddingTop="3dp" />
+
+    <TextView
+        android:id="@+id/commentNum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="3dp"
+        android:paddingLeft="6dp"
+        android:paddingTop="3dp" />
+
+    <LinearLayout
+        android:id="@+id/commentList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:orientation="vertical"></LinearLayout>
+</LinearLayout>

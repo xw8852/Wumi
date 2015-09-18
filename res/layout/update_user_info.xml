@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small"
+        android:background="@null"
+        android:hint="@string/username"
+        android:visibility="visible" />
+
+    <include layout="@layout/row_divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/row_text_padding"
+            android:paddingRight="@dimen/row_text_padding"
+            android:text="性别" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:id="@+id/sex"
+            android:layout_height="match_parent">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:id="@+id/boy"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/row_padding"
+                android:button="@drawable/radio_check"
+                android:checked="true"
+                android:gravity="center"
+                android:paddingLeft="@dimen/row_text_button_padding"
+                android:text="男" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/girl"
+                android:layout_marginLeft="@dimen/row_padding"
+                android:button="@drawable/radio_check"
+                android:checked="false"
+                android:gravity="center"
+                android:paddingLeft="@dimen/row_text_button_padding"
+                android:text="女" />
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <include layout="@layout/row_divider" />
+
+    <EditText
+        android:id="@+id/introduce"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="@string/introduce"
+        android:minHeight="@dimen/row_height"
+        android:visibility="visible" />
+
+    <include layout="@layout/row_divider" />
+</LinearLayout>

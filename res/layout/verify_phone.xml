@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/row_padding"
+    android:paddingRight="@dimen/row_padding">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/row_text_padding"
+        android:paddingTop="@dimen/row_text_padding"
+        android:id="@+id/reg_verify_tip"
+        android:text="@string/verify_reg_phone_tips" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingRight="@dimen/row_text_button_padding"
+            android:text="+86" />
+
+        <EditText
+            android:id="@+id/userphone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:inputType="phone"
+            android:text="18684835943" />
+
+        <Button
+            android:id="@+id/clock"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/row_text_button_padding"
+            android:layout_marginTop="@dimen/row_text_button_padding"
+            android:background="@drawable/btn_blue_medium_backgroud"
+            android:enabled="false"
+            android:paddingLeft="@dimen/row_text_button_padding"
+            android:paddingRight="@dimen/row_text_button_padding"
+            android:text="60s 重新获取"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <include layout="@layout/row_divider" />
+
+    <EditText
+        android:id="@+id/verifycode"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small"
+        android:background="@null"
+        android:hint="输入收到的验证码"
+        android:inputType="number" />
+
+    <include layout="@layout/row_divider" />
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small"
+        android:background="@null"
+        android:hint="@string/tabbed_reg_password_hint"
+        android:visibility="gone"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword"/>
+
+    <include layout="@layout/row_divider" android:id="@+id/password_divider" android:visibility="gone" />
+    <TextView
+        android:id="@+id/next"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small"
+        android:gravity="center"
+        android:text="@string/tabbed_reg_btn_submit"
+        android:textColor="@color/accent_blue_medium" />
+</LinearLayout>

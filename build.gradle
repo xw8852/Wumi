@@ -1,0 +1,64 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "22.0.1"
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+        }
+        instrumentTest.setRoot('androidTest')
+    }
+    defaultConfig {
+        applicationId "com.android.msx7.followinstagram"
+        minSdkVersion 14
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("./wumi.jks")
+            storePassword "wumi123"
+            keyAlias "wumi"
+            keyPassword "wumi123"
+        }
+        release {
+            storeFile file("./wumi.jks")
+            storePassword "wumi123"
+            keyAlias "wumi"
+            keyPassword "wumi123"
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            signingConfig signingConfigs.debug
+        }
+        release {
+            debuggable false
+//                runProguard true
+//                proguardFiles getDefaultProguardFile('proguard-android.txt'), file('proguard-project.txt')
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-annotations:22.2.1'
+    provided files('layoutlib.jar')
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.android.support:support-v4:23.0.0'
+}

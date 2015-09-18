@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="@dimen/row_text_button_padding">
+
+    <com.android.msx7.followinstagram.ui.image.CircleImageView
+        android:id="@+id/profileImg"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/profile_anonymous_user" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/row_text_padding"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume
+            android:id="@+id/comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="@dimen/row_height"
+            android:layout_height="@dimen/row_height"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_follow"
+            android:layout_width="@dimen/row_height"
+            android:layout_height="wrap_content"
+            android:background="@drawable/follow_btn"
+            android:padding="@dimen/row_text_button_padding"
+            android:text="@string/gofollow" />
+    </FrameLayout>
+</LinearLayout>

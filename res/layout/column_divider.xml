@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View android:layout_gravity="bottom" android:background="@color/grey_2"
+    android:layout_margin="@dimen/column_padding" android:layout_width="1.0px" android:layout_height="match_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" />

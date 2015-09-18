@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swipe="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_bar" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/list"
+        android:listSelector="@color/grey_1"
+        android:cacheColorHint="@color/transparent"
+        android:divider="@color/grey_2"
+        android:background="@color/white"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:dividerHeight="0.5dp"
+        android:layout_height="match_parent"></ListView>
+    <com.fortysevendeg.swipelistview.SwipeListView
+        android:id="@+id/swipeListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:listSelector="#00000000"
+        swipe:swipeActionLeft="reveal"
+        swipe:swipeActionRight="reveal"
+        swipe:swipeAnimationTime="@integer/config_activityDefaultDur"
+        swipe:swipeBackView="@+id/back"
+        swipe:swipeMode="none"
+        android:visibility="gone"
+        swipe:swipeOffsetLeft="200dp"
+        swipe:swipeFrontView="@+id/font">
+        <requestFocus/>
+        </com.fortysevendeg.swipelistview.SwipeListView>
+    <!--
+     swipe:swipeActionLeft="[reveal | dismiss]"
+        swipe:swipeActionRight="[reveal | dismiss]"
+        swipe:swipeMode="[none | both | right | left]"
+        swipe:swipeCloseAllItemsWhenMoveList="[true | false]"
+        swipe:swipeOpenOnLongPress="[true | false]"
+        swipe:swipeAnimationTime="[miliseconds]"
+        swipe:swipeOffsetLeft="[dimension]"
+        swipe:swipeOffsetRight="[dimension]"
+    -->
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:background="@color/grey_2" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/comment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="评论"
+            android:minHeight="@dimen/action_bar_height" />
+
+        <TextView
+            android:id="@+id/direct_private_share_action_button"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/action_bar_height"
+            android:layout_weight="0"
+            android:background="@color/accent_blue_medium"
+            android:gravity="center"
+            android:maxLines="1"
+            android:minHeight="@dimen/action_bar_height"
+            android:paddingLeft="@dimen/row_text_padding"
+            android:paddingRight="@dimen/row_text_padding"
+            android:text="@string/direct_send"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>
