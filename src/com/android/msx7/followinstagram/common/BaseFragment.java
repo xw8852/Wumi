@@ -10,6 +10,7 @@ import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.ui.actionbar.ActionBar;
 import com.android.msx7.followinstagram.util.DialogUtils;
 import com.android.widget.TitleView;
+import com.baidu.mobstat.StatService;
 
 /**
  * Created by Josn on 2015/9/7.
@@ -51,5 +52,17 @@ public class BaseFragment extends Fragment {
             mProgressDialog.dismiss();
             mProgressDialog = null;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatService.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatService.onPause(this);
     }
 }

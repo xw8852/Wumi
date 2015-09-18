@@ -274,6 +274,12 @@ public class TabNewsFragment extends BaseFragment {
         //消息内容
         @SerializedName("content")
         public String content;
+        //回复内容
+        @SerializedName("reply")
+        public String reply;
+        //产生消息的po_id
+        @SerializedName("i_po_id")
+        public long i_po_id;
 
     }
 

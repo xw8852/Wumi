@@ -80,8 +80,10 @@ public class GridPoFragment extends BaseFragment {
         getTitleBar().setTitle("有你的照片", null);
         if (getArguments() != null) {
             String title = getArguments().getString(PARAM_USER_NAME);
-            title = "有" + title + "的照片";
-            if (!TextUtils.isEmpty(title)) getTitleBar().setTitle(title, null);
+            if (!TextUtils.isEmpty(title)) {
+                title = "有" + title + "的照片";
+                getTitleBar().setTitle(title, null);
+            }
         }
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -112,7 +114,7 @@ public class GridPoFragment extends BaseFragment {
     void loadMore() {
         if (page == -1) return;
         int count = gridView.getAdapter().getCount();
-        if (count % 18 != 0) return;
+        if (count == 0 || count % 18 != 0) return;
         if (footerBar.getVisibility() == View.VISIBLE) return;
         footerBar.setVisibility(View.VISIBLE);
         final HashMap<String, Object> map = new HashMap<String, Object>();

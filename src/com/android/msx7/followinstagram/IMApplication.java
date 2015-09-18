@@ -54,10 +54,9 @@ public class IMApplication extends Application {
         application = this;
         initImageLoader(getApplicationContext());
         mDisplayImageOptions = new DisplayImageOptions.Builder().cacheInMemory(true)
-//                .showImageForEmptyUri(R.drawable.ic_default_img)
-//                .showImageOnFail(R.drawable.ic_default_img)
-//                .showImageOnLoading(R.drawable.loading_circle)
-//                .showImageOnLoading()
+//                .showImageForEmptyUri(R.drawable.ic_photo)
+//                .showImageOnFail(R.drawable.ic_photo)
+//                .showImageOnLoading(R.drawable.ic_photo)
                 .cacheOnDisk(true).build();
 
 

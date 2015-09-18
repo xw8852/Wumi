@@ -11,6 +11,7 @@ import com.android.layoutlib.bridge.bars.TitleBar;
 import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.util.DialogUtils;
 import com.android.widget.TitleView;
+import com.baidu.mobstat.StatService;
 
 /**
  * Created by Josn on 2015/9/7.
@@ -46,5 +47,17 @@ public class BaseActivity extends Activity {
             mProgressDialog.dismiss();
             mProgressDialog = null;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StatService.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        StatService.onPause(this);
     }
 }

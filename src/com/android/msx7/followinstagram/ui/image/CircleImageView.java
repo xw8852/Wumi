@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.drawable.AnimatedRotateDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -51,7 +52,7 @@ public class CircleImageView extends ImageView {
 //        canvas.clipPath(clipPath);
 //        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
 //        super.onDraw(canvas);
-        if (!isRoud) {
+        if (!isRoud||!(getDrawable() instanceof  BitmapDrawable)) {
             super.onDraw(canvas);
             return;
         }
@@ -64,6 +65,7 @@ public class CircleImageView extends ImageView {
         if (getWidth() == 0 || getHeight() == 0) {
             return;
         }
+
         Bitmap b = ((BitmapDrawable) drawable).getBitmap();
         Bitmap bitmap = b.copy(Bitmap.Config.ARGB_8888, true);
         int w = getWidth(), h = getHeight();

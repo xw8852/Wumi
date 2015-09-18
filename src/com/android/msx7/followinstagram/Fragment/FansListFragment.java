@@ -243,7 +243,7 @@ public class FansListFragment extends BaseFragment {
                                 dismissLoadingDialog();
                                 L.d(response);
                                 BaseResponse rs = new Gson().fromJson(response, BaseResponse.class);
-                                if (rs.retcode == 0 || rs.retbody == 7) {
+                                if (rs.retcode == 0 || rs.retcode == 7) {
                                     FollowBean bean = mAdapter.getItem(position);
                                     bean.relation = 2;
                                     mAdapter.remove(bean);
@@ -281,7 +281,7 @@ public class FansListFragment extends BaseFragment {
                                 dismissLoadingDialog();
                                 L.d(response);
                                 BaseResponse rs = new Gson().fromJson(response, BaseResponse.class);
-                                if (rs.retcode == 0 || rs.retbody == 7) {
+                                if (rs.retcode == 0 || rs.retcode == 7) {
                                     FollowBean bean = mAdapter.getItem(position);
                                     bean.relation = 0;
                                     mAdapter.remove(bean);

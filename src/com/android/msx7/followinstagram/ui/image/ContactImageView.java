@@ -70,6 +70,7 @@ public class ContactImageView extends FrameLayout {
         for (View view : listViews) {
             view.setVisibility(View.GONE);
         }
+        mImageView.setBackgroundColor(0xffe6e6e6);
         IMApplication.getApplication().displayImage(url, mImageView, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
