@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.android.msx7.followinstagram.util.L;
+
 import org.apache.http.client.utils.CloneUtils;
 
 import java.util.concurrent.locks.Lock;

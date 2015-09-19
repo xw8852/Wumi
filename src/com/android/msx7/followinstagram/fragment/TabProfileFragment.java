@@ -1,5 +1,6 @@
 package com.android.msx7.followinstagram.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -134,7 +135,6 @@ public class TabProfileFragment extends BaseFragment {
             }
         });
 
-        getTitleBar().setTitle(userName, null);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -158,18 +158,25 @@ public class TabProfileFragment extends BaseFragment {
         });
         edit = getView().findViewById(R.id.edit);
         follow = (Button) getView().findViewById(R.id.btn_follow);
-        boolean isme = (userId == IMApplication.getApplication().getUserInfo().userId) | (IMApplication.getApplication().getUserInfo().userName.equals(userName));
+        boolean isme = (userId == IMApplication.getApplication().getUserInfo().userId) || (IMApplication.getApplication().getUserInfo().userName.equals(userName));
         if (!isme) {
             edit.setVisibility(View.GONE);
             follow.setVisibility(View.VISIBLE);
-        }
+        } else userName = IMApplication.getApplication().getUserInfo().userName;
+        getTitleBar().setTitle(userName, null);
         follow.setOnClickListener(new AddFollow());
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(v.getContext(), EditUserActivity.class));
+                startActivityForResult(new Intent(v.getContext(), EditUserActivity.class), 100);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        getTitleBar().setTitle(IMApplication.getApplication().getUserInfo().userName, null);
     }
 
     class AddFollow implements View.OnClickListener {
@@ -263,9 +270,9 @@ public class TabProfileFragment extends BaseFragment {
         public void onRefresh() {
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("type", "info");
-            map.put("s_user_name", userName);
             if (userId > 0)
                 map.put("i_user_id", userId);
+            else map.put("s_user_name", userName);
             map.put("need_counter", 1);
             map.put("need_relation", 1);
             IMApplication application = IMApplication.getApplication();
@@ -287,6 +294,12 @@ public class TabProfileFragment extends BaseFragment {
                         if (userId <= 0) {
                             userId = result.retbody.uid;
                             header.onRefresh();
+                        }
+                        UserInfo userInfo = IMApplication.getApplication().getUserInfo();
+                        if (userInfo.userId == result.retbody.uid) {
+                            userInfo.s_introduce = result.retbody.s_introduce;
+                            userInfo.sex = result.retbody.sex;
+                            IMApplication.getApplication().saveUserInfo(userInfo);
                         }
                     }
                 }
@@ -411,6 +424,10 @@ public class TabProfileFragment extends BaseFragment {
         //UID
         @SerializedName("i_user_id")
         public long uid;
+        @SerializedName("s_introduce")
+        public String s_introduce;
+        @SerializedName("i_sex")
+        public int sex;
     }
 
 

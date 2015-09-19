@@ -6,42 +6,63 @@
     android:orientation="vertical">
 
     <include layout="@layout/title_bar" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"></LinearLayout>
 
-    <GridView
-        android:id="@+id/gridview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/row_text_button_padding"
-        android:horizontalSpacing="@dimen/row_text_button_padding"
-        android:numColumns="3"
-        android:verticalSpacing="@dimen/row_text_button_padding"></GridView>
-    <LinearLayout
-        android:id="@+id/footerBar"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_height="@dimen/action_bar_height">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:src="@drawable/progress_medium_holo"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-        <TextView
+        <LinearLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/descInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="活动简介："
+                android:visibility="gone" />
+            <TextView
+                android:id="@+id/desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text=""
+                android:layout_marginLeft="12dp"
+                android:visibility="gone" />
+
+            <GridView
+                android:id="@+id/gridview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/row_text_button_padding"
+                android:horizontalSpacing="@dimen/row_text_button_padding"
+                android:numColumns="3"
+                android:verticalSpacing="@dimen/row_text_button_padding"></GridView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/footerBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_bar_height"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/progress_medium_holo" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:text="暂无照片"
-            android:id="@+id/empty"
-            android:visibility="gone"
             android:textSize="@dimen/font_xlarge"
-            android:layout_height="match_parent" />
+            android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>

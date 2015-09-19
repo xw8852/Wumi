@@ -36,6 +36,7 @@
         <item name="android:textColorLink">@color/accent_blue_medium</item>
         <item name="android:soundEffectsEnabled">false</item>
         <item name="android:dialogTheme">@style/transparent_dialog</item>
+        <item name="android:screenOrientation">portrait</item>
     </style>
 
     <style name="AppProgressBar" parent="@android:style/Widget.ProgressBar">

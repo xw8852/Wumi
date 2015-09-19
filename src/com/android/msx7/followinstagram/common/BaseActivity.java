@@ -40,9 +40,9 @@ public class BaseActivity extends Activity {
     protected void showLoadingDialog(int msgId) {
         dismissLoadingDialog();
         if (msgId > 0 && !TextUtils.isEmpty(getString(msgId))) {
-            mProgressDialog = DialogUtils.showLoadingProgress(this, getString(msgId), false);
+            mProgressDialog = DialogUtils.showLoadingProgress(this, getString(msgId), true);
         } else {
-            mProgressDialog = DialogUtils.showLoadingProgress(this, false);
+            mProgressDialog = DialogUtils.showLoadingProgress(this, true);
         }
     }
 

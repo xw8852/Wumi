@@ -12,18 +12,22 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.db.BaseTable;
 import com.android.msx7.followinstagram.IMApplication;
 import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.activity.MainTabActivity;
+import com.android.msx7.followinstagram.bean.dbBean.ActionDB;
 import com.android.msx7.followinstagram.common.BaseAdapter;
 import com.android.msx7.followinstagram.common.BaseFragment;
 import com.android.msx7.followinstagram.common.BaseResponse;
 import com.android.msx7.followinstagram.common.YohoField;
 import com.android.msx7.followinstagram.net.BaseRequest;
+import com.android.msx7.followinstagram.ui.actionbar.ActionBar;
 import com.android.msx7.followinstagram.ui.push.PageFooter;
 import com.android.msx7.followinstagram.ui.push.PushHeader;
 import com.android.msx7.followinstagram.ui.span.NameSpan;
 import com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume;
+import com.android.msx7.followinstagram.util.DialogUtils;
 import com.android.msx7.followinstagram.util.L;
 import com.android.msx7.followinstagram.util.ToastUtil;
 import com.android.msx7.followinstagram.util.VolleyErrorUtils;
@@ -37,6 +41,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Josn on 2015/9/10.
@@ -108,6 +113,7 @@ public class TabNewsFragment extends BaseFragment {
                 if (result.retcode != 0) {
                     ToastUtil.show(result.showmsg);
                 } else {
+                    sendClear();
                     mAdapter.changeData(result.retbody);
                     if (mListView.getLastVisiblePosition() - mListView.getHeaderViewsCount() > 10) {
                         footer.pushLoadMore();
@@ -208,6 +214,29 @@ public class TabNewsFragment extends BaseFragment {
                     activity.addFragmentToBackStack(fragment);
                 }
             });
+            if (bean.j_detail.i_po_id > 0) {
+                holder.img.setVisibility(View.VISIBLE);
+                IMApplication.getApplication().displayImage(bean.j_detail.imgs.get(0), holder.img);
+                holder.img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainTabActivity activity = (MainTabActivity) v.getContext();
+                        activity.addFragmentToBackStack(SinglePoFragment.getFragment(bean.j_detail.i_po_id));
+                    }
+                });
+            } else if ((bean.i_type == 112 || bean.i_type == 109) && bean.j_detail.i_activity_id > 0 &&
+                    // 查询本地数据库是否对进行过此操作
+                    !new ActionDB.ActionDatabase(inflater.getContext()).hasRead(bean.i_message_id)) {
+                //type 112表示申请 type 111表示操作结果
+                holder.btn.setVisibility(View.VISIBLE);
+                holder.btn.setText("通过");
+                holder.btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DialogUtils.ShowDialog("活动申请", bean.j_detail.content, "通过", new PassListener(bean), "否决", new NoPassListener(bean), v.getContext());
+                    }
+                });
+            }
             return convertView;
         }
 
@@ -218,6 +247,111 @@ public class TabNewsFragment extends BaseFragment {
             ImageView img;
 
         }
+    }
+
+    class PassListener implements View.OnClickListener {
+        MessageBean bean;
+
+        public PassListener(MessageBean bean) {
+            this.bean = bean;
+        }
+
+        @Override
+        public void onClick(View v) {
+            showLoadingDialog(-1);
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("type", "process");
+            map.put("i_msg_id", bean.i_message_id);
+            map.put("in_or_not", 1);
+            map.put("i_activity_id", bean.j_detail.i_activity_id);
+            map.put("i_apply_uid", bean.i_send_uid);
+            map.put("chkcode", IMApplication.getApplication().getchkcode());
+            Response.ErrorListener listener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyErrorUtils.showError(error);
+                    dismissLoadingDialog();
+                }
+            };
+            Response.Listener<String> resultListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    L.d(response);
+                    dismissLoadingDialog();
+                    BaseResponse re = new Gson().fromJson(response, BaseResponse.class);
+                    if (re.retcode != 0) {
+                        ToastUtil.show(re.showmsg);
+                    } else {
+                        new BaseTable<ActionDB>(IMApplication.getApplication()) {
+                        }.insertOrUpdate(new ActionDB(bean.i_message_id));
+                        ToastUtil.show("成功通过申请");
+                        onResume();
+                    }
+                }
+            };
+            IMApplication.getApplication().runVolleyRequest(new BaseRequest(Request.Method.POST, YohoField.URL_ACTIVITY, new Gson().toJson(map), resultListener, listener));
+        }
+    }
+
+    class NoPassListener implements View.OnClickListener {
+        MessageBean bean;
+
+        public NoPassListener(MessageBean bean) {
+            this.bean = bean;
+        }
+
+        @Override
+        public void onClick(View v) {
+            showLoadingDialog(-1);
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("type", "process");
+            map.put("i_msg_id", bean.i_message_id);
+            map.put("in_or_not", 0);
+            map.put("i_activity_id", bean.j_detail.i_activity_id);
+            map.put("i_apply_uid", bean.i_send_uid);
+            map.put("chkcode", IMApplication.getApplication().getchkcode());
+            Response.ErrorListener listener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyErrorUtils.showError(error);
+                    dismissLoadingDialog();
+                }
+            };
+            Response.Listener<String> resultListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    L.d(response);
+                    dismissLoadingDialog();
+                    BaseResponse re = new Gson().fromJson(response, BaseResponse.class);
+                    if (re.retcode != 0) {
+                        ToastUtil.show(re.showmsg);
+                        new BaseTable<ActionDB>(IMApplication.getApplication()) {
+                        }.insertOrUpdate(new ActionDB(bean.i_message_id));
+                    } else {
+                        ToastUtil.show("成功拒绝申请");
+                        onResume();
+                    }
+                }
+            };
+            IMApplication.getApplication().runVolleyRequest(new BaseRequest(Request.Method.POST, YohoField.URL_ACTIVITY, new Gson().toJson(map), resultListener, listener));
+        }
+    }
+
+    void sendClear() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("type", "clear");
+        map.put("chkcode", IMApplication.getApplication().getchkcode());
+        IMApplication.getApplication().runVolleyRequest(new BaseRequest(Request.Method.POST, YohoField.URL_MESSAGE, new Gson().toJson(map), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }));
     }
 
     /***
@@ -254,7 +388,7 @@ public class TabNewsFragment extends BaseFragment {
         //        消息类型
         @SerializedName("i_type")
         public int i_type;
-        //是否读过
+        //是否读过  如果用户有3个未读计数，那么把前三个消息贴上标记。0未读
         @SerializedName("i_has_read")
         public int i_has_read;
         @SerializedName("j_detail")
@@ -280,6 +414,8 @@ public class TabNewsFragment extends BaseFragment {
         //产生消息的po_id
         @SerializedName("i_po_id")
         public long i_po_id;
+        @SerializedName("l_img_url_list")
+        public List<String> imgs;
 
     }
 

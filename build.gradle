@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "22.0.1"
+    buildToolsVersion "21.0.1"
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -56,11 +56,12 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.commit451:PhotoView:1.2.4'
     compile 'com.android.support:support-annotations:22.2.1'
     provided files('layoutlib.jar')
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.android.support:support-v4:23.0.0'
+    compile 'com.android.support:support-v4:23.0.1'
 }
 
 

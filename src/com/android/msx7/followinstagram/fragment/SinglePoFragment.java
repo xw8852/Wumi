@@ -27,6 +27,7 @@ import com.android.msx7.followinstagram.common.ErrorCode;
 import com.android.msx7.followinstagram.net.PoRequest;
 import com.android.msx7.followinstagram.net.ZanRequest;
 import com.android.msx7.followinstagram.ui.span.AdressSpan;
+import com.android.msx7.followinstagram.ui.span.EventSpan;
 import com.android.msx7.followinstagram.ui.span.NameSpan;
 import com.android.msx7.followinstagram.ui.span.TopicSpan;
 import com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume;
@@ -61,6 +62,15 @@ public class SinglePoFragment extends BaseFragment {
         return fragment;
     }
 
+    public static final SinglePoFragment getFragment(HomeItem data) {
+        SinglePoFragment fragment = new SinglePoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("data", new Gson().toJson(data));
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,11 +87,18 @@ public class SinglePoFragment extends BaseFragment {
 
             }
         });
-        poId = getArguments().getLong(PARAM_ID);
         holder = new TabHomeFragment.Holder(getView().findViewById(R.id.layout_pinned_item));
         getTitleBar().setTitle("照片", null);
         getTitleBar().setRightImg(R.drawable.nav_refresh, freshListener);
-        freshListener.onClick(null);
+        if (getArguments().containsKey("data")) {
+            showData(new Gson().fromJson(getArguments().getString("data"), HomeItem.class));
+            poId = mItem.id;
+        } else {
+            poId = getArguments().getLong(PARAM_ID);
+            freshListener.onClick(null);
+        }
+
+
     }
 
     View.OnClickListener freshListener = new View.OnClickListener() {
@@ -118,6 +135,9 @@ public class SinglePoFragment extends BaseFragment {
 
     void showData(final HomeItem item) {
         this.mItem = item;
+        if (mItem.userInfo.uid == IMApplication.getApplication().getUserInfo().userId) {
+            mItem.userInfo.userName = IMApplication.getApplication().getUserInfo().userName;
+        }
         IMApplication application = IMApplication.getApplication();
         application.displayImage(item.userInfo.userImg, holder.userImg);
         holder.userName.setText(item.userInfo.userName);
@@ -130,9 +150,17 @@ public class SinglePoFragment extends BaseFragment {
         holder.goods.setVisibility(View.GONE);
         holder.desc.setVisibility(View.GONE);
         holder.goods.setOnClickListener(new LikeFragmentListener(item.id));
+        holder.event.setVisibility(View.GONE);
+        if (item.event != null) {
+            SpannableStringBuilder builder = new SpannableStringBuilder(item.event.name);
+            builder.setSpan(new EventSpan(item.event), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.event.setText(builder);
+            holder.event.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
+            holder.event.setVisibility(View.VISIBLE);
+        }
         if (item.j_loc_info != null && !TextUtils.isEmpty(item.j_loc_info.addr)) {
             SpannableStringBuilder builder = new SpannableStringBuilder(item.j_loc_info.addr);
-            builder.setSpan(new AdressSpan(item.j_loc_info.loc_id,item.j_loc_info.addr), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setSpan(new AdressSpan(item.j_loc_info.loc_id, item.j_loc_info.addr), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.address.setText(builder);
             holder.address.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
             holder.address.setVisibility(View.VISIBLE);
@@ -187,7 +215,7 @@ public class SinglePoFragment extends BaseFragment {
             for (ZanItem zan : item.zans) {
                 int start = builder.length();
                 builder.append(zan.name);
-                builder.setSpan(new NameSpan(item.userInfo.userName, item.userInfo.userId), start, start + zan.name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new NameSpan(item.userInfo.userName, item.userInfo.uid), start, start + zan.name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             Paint paint = new Paint();
             paint.setTextSize(holder.goodNames.getTextSize());

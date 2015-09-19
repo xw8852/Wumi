@@ -33,7 +33,6 @@
                 android:id="@+id/tabbed_landing_logo_container"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="vertical">
 
                 <com.android.msx7.followinstagram.ui.TabbedLandingLogoView

@@ -22,4 +22,7 @@ public class UserInfo {
     public int sex;
     @SerializedName("chkcode")
     public  String chkcode;
+    @SerializedName("s_introduce")
+    public  String s_introduce;
+
 }

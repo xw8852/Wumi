@@ -15,6 +15,9 @@ public abstract class BaseAdapter<T> extends android.widget.BaseAdapter {
     protected Context mCtx;
     protected List<T> data;
 
+    public List<T> getData(){
+        return data;
+    }
     public BaseAdapter(Context ctx, List<T> data) {
         super();
         this.mCtx = ctx;

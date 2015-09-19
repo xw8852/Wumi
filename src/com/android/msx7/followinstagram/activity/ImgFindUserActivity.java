@@ -51,6 +51,7 @@ import com.faceplusplus.api.FaceDetecter.Face;
 import com.facepp.http.HttpRequests;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -78,6 +79,7 @@ public class ImgFindUserActivity extends BaseActivity {
     int bitmapHeight;
     ListView listView;
     List<SimpleContact> data = new ArrayList<SimpleContact>();
+    List<SimpleContact> quanList = new ArrayList<SimpleContact>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +94,11 @@ public class ImgFindUserActivity extends BaseActivity {
 //        detectHandler = new Handler(detectThread.getLooper());
 //        detecter = new FaceDetecter();
 //        detecter.init(this, "54662625acbadb3c5b395cd2d39c98d9");
-        IMApplication.getApplication().displayImage(Uri.fromFile(new File(path)).toString(), img, new ImageLoadingListener() {
+        if (getIntent().hasExtra("data")) {
+            quanList = new Gson().fromJson(getIntent().getStringExtra("data"), new TypeToken<List<SimpleContact>>() {
+            }.getType());
+        }
+        IMApplication.getApplication().displayImage(path, img, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
 
@@ -225,7 +231,7 @@ public class ImgFindUserActivity extends BaseActivity {
             if (_tmp instanceof Tag) {
                 Tag _tag = (Tag) _tmp;
                 SimpleContact contact = _tag.simpleContact;
-                contact.position = bitmapWidth / _tag.getX() + "|" + bitmapHeight / _tag.getY();
+                contact.position = bitmapWidth / _tag.getX() + "ABCD" + bitmapHeight / _tag.getY();
                 arrs.add(contact);
             }
         }
@@ -276,7 +282,7 @@ public class ImgFindUserActivity extends BaseActivity {
                     if (layout.leftMargin + width > getResources().getDisplayMetrics().widthPixels) {
                         layout.leftMargin = getResources().getDisplayMetrics().widthPixels - width;
                     }
-                    layout.topMargin = (int) e.getY()+img.getTop();
+                    layout.topMargin = (int) e.getY() + img.getTop();
                     tag.setLayoutParams(layout);
                     tag.setVisibility(View.VISIBLE);
                     frameLayout.addView(tag);
@@ -292,6 +298,28 @@ public class ImgFindUserActivity extends BaseActivity {
             }
         });
 
+        if (!quanList.isEmpty()) {
+            for (SimpleContact contact : quanList) {
+                // contact.position = bitmapWidth / _tag.getX() + "ABCD" + bitmapHeight / _tag.getY();
+                if (TextUtils.isEmpty(contact.position)) continue;
+                String[] postion = contact.position.split("ABCD");
+                if (postion == null || postion.length != 2 || TextUtils.isEmpty(postion[0]) || TextUtils.isEmpty(postion[1]))
+                    continue;
+                Tag tag = new Tag(ImgFindUserActivity.this);
+                ViewUtils.measureView(tag);
+                int width = tag.getMeasuredWidth();
+                FrameLayout.LayoutParams layout = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layout.leftMargin = (int) (bitmapWidth / Float.valueOf(postion[0]));
+                if (layout.leftMargin + width > getResources().getDisplayMetrics().widthPixels) {
+                    layout.leftMargin = getResources().getDisplayMetrics().widthPixels - width;
+                }
+                layout.topMargin = (int) (img.getTop() + (bitmapHeight / Float.valueOf(postion[1])));
+                tag.setText(contact);
+                tag.setLayoutParams(layout);
+                tag.setVisibility(View.VISIBLE);
+                frameLayout.addView(tag);
+            }
+        }
 //        detectHandler.post(new Runnable() {
 //
 //            @Override

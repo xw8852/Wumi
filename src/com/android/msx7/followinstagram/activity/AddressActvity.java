@@ -54,7 +54,6 @@ public class AddressActvity extends BaseActivity {
         lng = getIntent().getDoubleExtra(PARAM_LNG, 0);
         listView = (ListView) findViewById(R.id.list);
         mAdapter = new SimpleAdapter(this, new ArrayList<AddressLocation>());
-        listView.setAdapter(mAdapter);
         header = new PushHeader(listView, new PushHeader.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -64,16 +63,20 @@ public class AddressActvity extends BaseActivity {
         listView.setSelector(new ColorDrawable(getResources().getColor(R.color.accent_blue_light)));
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         getTitleBar().setTitle("地址", null);
-        getTitleBar().setRightBtn("确定",new View.OnClickListener() {
+        getTitleBar().setRightBtn("确定", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddressLocation location = mAdapter.getItem((int) listView.getSelectedItemId());
                 Intent intent = new Intent();
-                intent.putExtra("data", new Gson().toJson(location));
+                if (mAdapter.getCount() > 0 && listView.getCheckedItemPosition() > 0) {
+                    int postion = Math.max(0, listView.getCheckedItemPosition() - listView.getHeaderViewsCount());
+                    AddressLocation location = mAdapter.getItem(postion);
+                    intent.putExtra("data", new Gson().toJson(location));
+                }
                 setResult(RESULT_OK, intent);
                 finish();
             }
         });
+        listView.setAdapter(mAdapter);
     }
 
     @Override

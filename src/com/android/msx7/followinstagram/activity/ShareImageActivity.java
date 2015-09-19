@@ -19,6 +19,7 @@ import com.android.msx7.followinstagram.IMApplication;
 import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.activity.AddressActvity.AddressLocation;
 import com.android.msx7.followinstagram.activity.ImgFindUserActivity.SimpleContact;
+import com.android.msx7.followinstagram.bean.EventBean;
 import com.android.msx7.followinstagram.common.BaseActivity;
 import com.android.msx7.followinstagram.net.PoRequest;
 import com.android.msx7.followinstagram.ui.login.BackActionButtonDrawable;
@@ -43,17 +44,21 @@ import java.util.List;
 /**
  * Created by Josn on 2015/9/10.
  */
-public class ShareImageActivity extends BaseActivity {
+public class ShareImageActivity extends ImageSelectActivity {
+
     public static final int QUAN_REN = 0x100;
     public static final int ADDRESS = 0x101;
+    public static final int EVENT = 0x102;
     public static final String PARAM_IMG_PATH = "param_img_path";
     String path;
-
     ImageView shareImg;
     Pair<String, String> pair;
     EditText desc;
     AddressLocation mAddressLocation;
+    EventBean mEvent;
     TextView address1;
+    TextView action1;
+    TextView people1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +67,19 @@ public class ShareImageActivity extends BaseActivity {
         addBack();
         shareImg = (ImageView) findViewById(R.id.img);
         address1 = (TextView) findViewById(R.id.address1);
+        action1 = (TextView) findViewById(R.id.action1);
+        people1 = (TextView) findViewById(R.id.people1);
         path = getIntent().getStringExtra(PARAM_IMG_PATH);
-
-        IMApplication.getApplication().displayImage(Uri.fromFile(new File(path)).toString(), shareImg);
+//        path = Uri.decode(Uri.fromFile(new File(path)).toString());
+        if (getIntent().hasExtra("EVENT")) {
+            mEvent = new Gson().fromJson(getIntent().getStringExtra("EVENT"), EventBean.class);
+            if (mEvent != null) {
+                action1.setText(mEvent.name);
+                action1.setVisibility(View.VISIBLE);
+            }
+        }
+        if (!TextUtils.isEmpty(path))
+            IMApplication.getApplication().displayImage(Uri.decode(Uri.fromFile(new File(path)).toString()), shareImg);
         findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,8 +90,15 @@ public class ShareImageActivity extends BaseActivity {
         findViewById(R.id.people).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (TextUtils.isEmpty(path)) {
+                    ToastUtil.show("请先选择图片");
+                    return;
+                }
                 Intent intent = new Intent(ShareImageActivity.this, ImgFindUserActivity.class);
-                intent.putExtra(ImgFindUserActivity.PARAM_PATH, path);
+                if (quanList != null && !quanList.isEmpty()) {
+                    intent.putExtra("data", new Gson().toJson(quanList));
+                }
+                intent.putExtra(ImgFindUserActivity.PARAM_PATH, Uri.decode(Uri.fromFile(new File(path)).toString()));
                 startActivityForResult(intent, QUAN_REN);
             }
         });
@@ -135,9 +157,36 @@ public class ShareImageActivity extends BaseActivity {
                 }
             }
         });
+        findViewById(R.id.action).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(ShareImageActivity.this, EventListActivity.class), EVENT);
+            }
+        });
+        shareImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMenu();
+            }
+        });
     }
 
+    @Override
+    protected String getImagePrefix() {
+        return "ac_";
+    }
+
+    @Override
+    public View getImageView() {
+        return shareImg;
+    }
+
+
     public void share() {
+        if (TextUtils.isEmpty(path)) {
+            ToastUtil.show("请先选择图片");
+            return;
+        }
         showLoadingDialog(-1);
         if (pair != null) {
             submit();
@@ -164,11 +213,30 @@ public class ShareImageActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == QUAN_REN && data != null) {
+            if (!data.hasExtra("data")) {
+                quanList = null;
+                people1.setVisibility(View.GONE);
+                return;
+            }
             String _data = data.getStringExtra("data");
             L.d(_data);
             quanList = new Gson().fromJson(_data, new TypeToken<ArrayList<SimpleContact>>() {
             }.getType());
+            if (quanList != null && !quanList.isEmpty()) {
+                String text = "";
+                for (SimpleContact contact : quanList) {
+                    text += contact.name + "  ";
+                }
+                people1.setText(text);
+                people1.setVisibility(View.VISIBLE);
+            } else
+                people1.setVisibility(View.GONE);
         } else if (resultCode == RESULT_OK && requestCode == ADDRESS && data != null) {
+            if (!data.hasExtra("data")) {
+                mAddressLocation = null;
+                address1.setVisibility(View.GONE);
+                return;
+            }
             String _data = data.getStringExtra("data");
             L.d(_data);
             mAddressLocation = new Gson().fromJson(_data, AddressLocation.class);
@@ -177,6 +245,61 @@ public class ShareImageActivity extends BaseActivity {
                 address1.setVisibility(View.VISIBLE);
             } else
                 address1.setVisibility(View.GONE);
+        } else if (resultCode == RESULT_OK && requestCode == EVENT && data != null) {
+            if (!data.hasExtra("data")) {
+                mEvent = null;
+                action1.setVisibility(View.GONE);
+                return;
+            }
+            String _data = data.getStringExtra("data");
+            L.d(_data);
+            mEvent = new Gson().fromJson(_data, EventBean.class);
+            if (mEvent != null && !TextUtils.isEmpty(mEvent.name)) {
+                action1.setText(mEvent.name);
+                action1.setVisibility(View.VISIBLE);
+            } else
+                action1.setVisibility(View.GONE);
+        } else {
+            dismissMenu();
+            switch (requestCode) {
+                case OPEN_PIC:
+                    L.d("---OPEN_PIC---" + data.getData().toString());
+                    if (data != null) {
+                        mFileUri = data.getData();
+                        String _imgPath = getPath(this, mFileUri);
+                        L.d("onActivityResult()--->imgPath=" + _imgPath);
+                        L.d("MSG", "onActivityResult()--->Uri=" + mFileUri.toString());
+                        if (!TextUtils.isEmpty(_imgPath)) {
+                            path = _imgPath;
+                            IMApplication.getApplication().displayImage(Uri.decode(Uri.fromFile(new File(path)).toString()), shareImg);
+                        }
+                    }
+                    break;
+                case OPEN_PIC_KITKAT:
+                    L.d("---OPEN_PIC_KITKAT---" + data.getData().toString());
+                    if (data != null) {
+                        mFileUri = data.getData();
+                        String imgPath = getPath(this, mFileUri);
+                        L.d("onActivityResult()--->imgPath=" + imgPath);
+                        L.d("MSG", "onActivityResult()--->Uri=" + mFileUri.toString());
+                        if (!TextUtils.isEmpty(imgPath)) {
+                            path = imgPath;
+                            IMApplication.getApplication().displayImage(Uri.decode(Uri.fromFile(new File(path)).toString()), shareImg);
+                        }
+                    }
+                    break;
+                case OPEN_CAMERA_CODE:
+                    final String path = mFileUri == null ? "" : mFileUri.getPath();
+                    if (!TextUtils.isEmpty(path) && new File(path).exists()) {
+                        ShareImageActivity.this.path = path;
+                        IMApplication.getApplication().displayImage(Uri.decode(Uri.fromFile(new File(path)).toString()), shareImg);
+                    } else {
+                        ToastUtil.show("无法获取照片！");
+                    }
+                    break;
+
+
+            }
         }
     }
 
@@ -213,6 +336,14 @@ public class ShareImageActivity extends BaseActivity {
             map3.put("loc_id", mAddressLocation._id);
             map3.put("addr", mAddressLocation.s_addr);
             map2.put("j_loc_info", map3);
+        }
+        if (mEvent != null) {
+//            _item['j_activity']  = {'id':10,'name':'02-617中秋大连行'}
+            HashMap<String, Object> map4 = new HashMap<String, Object>();
+            map4.put("id", mEvent.eventId);
+            map4.put("name", mEvent.name);
+            map2.put("j_activity", map4);
+
         }
         if (!TextUtils.isEmpty(desc.getText().toString())) {
             map2.put("s_desc", desc.getText().toString());
@@ -254,7 +385,8 @@ public class ShareImageActivity extends BaseActivity {
          　　TAG_MAKE：设备品牌。
          　　TAG_MODEL：设备型号，整形表示，在ExifInterface中有常量对应表示。
          　　TAG_ORIENTATION：旋转角度，整形表示，在ExifInterface中有常量对应表示。
-         TAG_GPS_LATITUDE  TAG_GPS_LONGITUDE
+         TAG_GPS_LATITUDE
+         TAG_GPS_LONGITUDE
          */
         try {
             L.d(path);

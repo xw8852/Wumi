@@ -39,6 +39,7 @@ import com.android.msx7.followinstagram.ui.image.ContactImageView;
 import com.android.msx7.followinstagram.ui.push.PageFooter;
 import com.android.msx7.followinstagram.ui.push.PushHeader;
 import com.android.msx7.followinstagram.ui.span.AdressSpan;
+import com.android.msx7.followinstagram.ui.span.EventSpan;
 import com.android.msx7.followinstagram.ui.span.NameSpan;
 import com.android.msx7.followinstagram.ui.span.TopicSpan;
 import com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume;
@@ -118,7 +119,7 @@ public class TabHomeFragment extends BaseFragment {
     PageFooter.ILoadMoreListener moreListener = new PageFooter.ILoadMoreListener() {
         @Override
         public void loadMore(final int nextPage) {
-            map.remove("page");
+            map.remove("pageno");
             map.put("pageno", nextPage);
             String url = YohoField.URL_FEED;
             int method = Request.Method.POST;
@@ -231,6 +232,9 @@ public class TabHomeFragment extends BaseFragment {
             HomeItem item = getItem(position);
             IMApplication application = IMApplication.getApplication();
             application.displayImage(item.userInfo.userImg, headerHolder.userImg);
+            if(item.userInfo.uid==IMApplication.getApplication().getUserInfo().userId){
+                item.userInfo.userName=IMApplication.getApplication().getUserInfo().userName;
+            }
             headerHolder.userName.setText(item.userInfo.userName);
             headerHolder.userTime.setText(DateUtils.getActivityTime(item.creatTime));
             header.setOnClickListener(new NameListener(item.userInfo.userName, item.userInfo.uid));
@@ -252,6 +256,9 @@ public class TabHomeFragment extends BaseFragment {
             }
             holder = (Holder) convertView.getTag();
             final HomeItem item = getItem(position);
+            if(item.userInfo.uid==IMApplication.getApplication().getUserInfo().userId){
+                item.userInfo.userName=IMApplication.getApplication().getUserInfo().userName;
+            }
             IMApplication application = IMApplication.getApplication();
             application.displayImage(item.userInfo.userImg, holder.userImg);
             holder.userName.setText(item.userInfo.userName);
@@ -264,6 +271,14 @@ public class TabHomeFragment extends BaseFragment {
             holder.goods.setVisibility(View.GONE);
             holder.desc.setVisibility(View.GONE);
             holder.goods.setOnClickListener(new LikeFragmentListener(item.id));
+            holder.event.setVisibility(View.GONE);
+            if(item.event!=null){
+                SpannableStringBuilder builder = new SpannableStringBuilder(item.event.name);
+                builder.setSpan(new EventSpan(item.event), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.event.setText(builder);
+                holder.event.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
+                holder.event.setVisibility(View.VISIBLE);
+            }
             if (item.j_loc_info != null && !TextUtils.isEmpty(item.j_loc_info.addr)) {
                 SpannableStringBuilder builder = new SpannableStringBuilder(item.j_loc_info.addr);
                 builder.setSpan(new AdressSpan(item.j_loc_info.loc_id, item.j_loc_info.addr), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -298,7 +313,7 @@ public class TabHomeFragment extends BaseFragment {
                 holder.desc.setText(builder);
                 holder.desc.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
             }
-            holder.header.setOnClickListener(new NameListener(item.userInfo.userName, item.userInfo.userId));
+            holder.header.setOnClickListener(new NameListener(item.userInfo.userName, item.userInfo.uid));
             if (!item.isGood) {
                 Good good = new Good.GoodDB(inflater.getContext()).isGood(String.valueOf(item.id));
                 if (good != null) item.isGood = good.good;
@@ -320,7 +335,7 @@ public class TabHomeFragment extends BaseFragment {
                 for (ZanItem zan : item.zans) {
                     int start = builder.length();
                     builder.append(zan.name);
-                    builder.setSpan(new NameSpan(item.userInfo.userName, item.userInfo.userId), start, start + zan.name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    builder.setSpan(new NameSpan(zan.name, zan.userId), start, start + zan.name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 Paint paint = new Paint();
                 paint.setTextSize(holder.goodNames.getTextSize());
@@ -407,6 +422,8 @@ public class TabHomeFragment extends BaseFragment {
         TextViewFixTouchConsume goodNames;
         //显示地址，如果有的话
         TextViewFixTouchConsume address;
+        //活动，如果有的话
+        TextViewFixTouchConsume event;
         //显示评论总数
         TextView commentNum;
         TextViewFixTouchConsume desc;
@@ -426,6 +443,7 @@ public class TabHomeFragment extends BaseFragment {
             goods = (TextView) root.findViewById(R.id.goods);
             desc = (TextViewFixTouchConsume) root.findViewById(R.id.desc);
             address = (TextViewFixTouchConsume) root.findViewById(R.id.address);
+            event = (TextViewFixTouchConsume) root.findViewById(R.id.event);
             commentNum = (TextView) root.findViewById(R.id.commentNum);
             commentList = (LinearLayout) root.findViewById(R.id.commentList);
         }
@@ -535,8 +553,16 @@ public class TabHomeFragment extends BaseFragment {
         public boolean isGood;
         @SerializedName("j_loc_info")
         public Location j_loc_info;
+        @SerializedName("j_activity")
+        public SimpleEvent event;
     }
 
+    public static class SimpleEvent{
+        @SerializedName("id")
+        public long id;
+        @SerializedName("name")
+        public String name;
+    }
     public static class Location {
         @SerializedName("loc_id")
         public long loc_id;

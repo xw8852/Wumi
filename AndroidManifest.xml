@@ -106,7 +106,9 @@
         <activity android:name=".activity.ShareImageActivity" />
         <activity android:name=".activity.AddressActvity" />
         <activity android:name=".activity.EditUserActivity" />
-        <activity android:name=".activity.ImgFindUserActivity" />
+        <activity android:name=".activity.EventListActivity" />
+        <activity android:name=".activity.AddEventActivity" />
+        <activity android:name=".activity.ImgFindUserActivity"  />
         <activity
             android:name=".activity.CommentActivity"
             android:windowSoftInputMode="stateHidden" />

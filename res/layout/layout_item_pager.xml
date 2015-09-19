@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical">
+
+    <uk.co.senab.photoview.PhotoView
+        android:id="@+id/img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+    <LinearLayout
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center_vertical"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
+        android:background="#9934373b"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/good"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/row_text_padding"
+            android:drawableLeft="@drawable/feed_button_like"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/row_text_padding"
+            android:drawableLeft="@drawable/feed_button_comment"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:text="" />
+
+
+        <com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/row_text_padding"
+            android:gravity="right"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp" />
+    </LinearLayout>
+
+</FrameLayout>

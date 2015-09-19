@@ -35,14 +35,16 @@
 
         <ImageView
             android:id="@+id/img"
-            android:layout_width="@dimen/row_height"
-            android:layout_height="@dimen/row_height"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="centerCrop"
             android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_follow"
             android:layout_width="@dimen/row_height"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:background="@drawable/follow_btn"
             android:padding="@dimen/row_text_button_padding"
             android:text="@string/gofollow" />

@@ -15,6 +15,7 @@ public class YohoField {
     public static final String URL_MESSAGE = "http://www.doyoho.com:80/api/message";
     public static final String URL_CONTACT = "http://www.doyoho.com:80/api/contact";
     public static final String URL_LOCATION = "http://www.doyoho.com:80/api/location";
+    public static final String URL_ACTIVITY = "http://www.doyoho.com:80/api/activity";
 
     public static final String BASE_DIR="wumi";
 
