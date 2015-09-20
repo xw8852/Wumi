@@ -26,16 +26,16 @@ public class NameSpan extends URLSpan {
 
     @Override
     public void onClick(View widget) {
-        if (widget.getContext() instanceof MainTabActivity) {
-            MainTabActivity activity = (MainTabActivity) widget.getContext();
+//        if (widget.getContext() instanceof MainTabActivity) {
+//            MainTabActivity activity = (MainTabActivity) widget.getContext();
             TabProfileFragment fragment = new TabProfileFragment();
             Bundle bundle = new Bundle();
             bundle.putLong(TabProfileFragment.PARAM_USER_ID, id);
             bundle.putString(TabProfileFragment.PARAM_USER_NAME, name);
             fragment.setArguments(bundle);
-            activity.addFragmentToBackStack(fragment);
-        } else
-            L.d("-----widget--" + name + "," + id);
+            MainTabActivity.addFragmentToBackStack(fragment,widget.getContext());
+//        } else
+//            L.d("-----widget--" + name + "," + id);
     }
 
     @Override

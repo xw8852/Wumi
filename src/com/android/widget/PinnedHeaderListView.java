@@ -11,7 +11,6 @@ import android.widget.AbsListView.OnScrollListener;
 
 public class PinnedHeaderListView extends ListView implements OnScrollListener {
 
-    private OnScrollListener mOnScrollListener;
 
     public static interface PinnedSectionedHeaderAdapter {
         public void configHeaderView(int position, View header);
@@ -28,17 +27,14 @@ public class PinnedHeaderListView extends ListView implements OnScrollListener {
 
     public PinnedHeaderListView(Context context) {
         super(context);
-//        setOnScrollListener(this);
     }
 
     public PinnedHeaderListView(Context context, AttributeSet attrs) {
         super(context, attrs);
-//        setOnScrollListener(this);
     }
 
     public PinnedHeaderListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-//        setOnScrollListener(this);
     }
 
 
@@ -147,10 +143,6 @@ public class PinnedHeaderListView extends ListView implements OnScrollListener {
     }
 
 
-    @Override
-    public void setOnScrollListener(OnScrollListener l) {
-        mOnScrollListener = l;
-    }
 
 
     @Override

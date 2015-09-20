@@ -31,17 +31,17 @@ public class EventSpan extends URLSpan {
     @Override
     public void onClick(View widget) {
         if (click) return;
-        if (widget.getContext() instanceof MainTabActivity) {
-            MainTabActivity activity = (MainTabActivity) widget.getContext();
+//        if (widget.getContext() instanceof MainTabActivity) {
+//            MainTabActivity activity = (MainTabActivity) widget.getContext();
             GridActionFragment fragment = new GridActionFragment();
 //            TabHomeFragment fragment = new TabHomeFragment();
             Bundle bundle = new Bundle();
             bundle.putLong(GridActionFragment.PARAM_EVENT_ID, event.id);
             bundle.putString(GridActionFragment.PARAM_EVENT_NAME, event.name);
             fragment.setArguments(bundle);
-            activity.addFragmentToBackStack(fragment);
-        } else
-            L.d("-----widget--" + event.name);
+            MainTabActivity.addFragmentToBackStack(fragment,widget.getContext());
+//        } else
+//            L.d("-----widget--" + event.name);
     }
 
     @Override

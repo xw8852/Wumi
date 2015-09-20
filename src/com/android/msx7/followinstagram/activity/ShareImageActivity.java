@@ -223,11 +223,7 @@ public class ShareImageActivity extends ImageSelectActivity {
             quanList = new Gson().fromJson(_data, new TypeToken<ArrayList<SimpleContact>>() {
             }.getType());
             if (quanList != null && !quanList.isEmpty()) {
-                String text = "";
-                for (SimpleContact contact : quanList) {
-                    text += contact.name + "  ";
-                }
-                people1.setText(text);
+                people1.setText("已圈出"+quanList.size()+"人");
                 people1.setVisibility(View.VISIBLE);
             } else
                 people1.setVisibility(View.GONE);
@@ -241,7 +237,7 @@ public class ShareImageActivity extends ImageSelectActivity {
             L.d(_data);
             mAddressLocation = new Gson().fromJson(_data, AddressLocation.class);
             if (mAddressLocation != null && !TextUtils.isEmpty(mAddressLocation.s_addr)) {
-                address1.setText(mAddressLocation.s_addr);
+                address1.setText(mAddressLocation.s_name);
                 address1.setVisibility(View.VISIBLE);
             } else
                 address1.setVisibility(View.GONE);
@@ -334,7 +330,7 @@ public class ShareImageActivity extends ImageSelectActivity {
              */
             HashMap<String, Object> map3 = new HashMap<String, Object>();
             map3.put("loc_id", mAddressLocation._id);
-            map3.put("addr", mAddressLocation.s_addr);
+            map3.put("addr", mAddressLocation.s_name);
             map2.put("j_loc_info", map3);
         }
         if (mEvent != null) {

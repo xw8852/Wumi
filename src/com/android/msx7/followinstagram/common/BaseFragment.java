@@ -50,9 +50,9 @@ public class BaseFragment extends Fragment {
     protected void showLoadingDialog(int msgId) {
         dismissLoadingDialog();
         if (msgId > 0 && !TextUtils.isEmpty(getString(msgId))) {
-            mProgressDialog = DialogUtils.showLoadingProgress(getView().getContext(), getString(msgId), false);
+            mProgressDialog = DialogUtils.showLoadingProgress(getView().getContext(), getString(msgId), true);
         } else {
-            mProgressDialog = DialogUtils.showLoadingProgress(getView().getContext(), false);
+            mProgressDialog = DialogUtils.showLoadingProgress(getView().getContext(), true);
         }
     }
 

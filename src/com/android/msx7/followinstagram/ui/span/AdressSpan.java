@@ -5,6 +5,7 @@ import android.text.TextPaint;
 import android.text.style.URLSpan;
 import android.view.View;
 
+import com.android.msx7.followinstagram.common.BaseActivity;
 import com.android.msx7.followinstagram.fragment.GridActionFragment;
 import com.android.msx7.followinstagram.fragment.GridPoFragment;
 import com.android.msx7.followinstagram.fragment.TabHomeFragment;
@@ -36,17 +37,17 @@ public class AdressSpan extends URLSpan {
     @Override
     public void onClick(View widget) {
         if (click) return;
-        if (widget.getContext() instanceof MainTabActivity) {
-            MainTabActivity activity = (MainTabActivity) widget.getContext();
+//        if (widget.getContext() instanceof MainTabActivity) {
+//            MainTabActivity activity = (BaseActivity) widget.getContext();
             GridActionFragment fragment = new GridActionFragment();
 //            TabHomeFragment fragment = new TabHomeFragment();
             Bundle bundle = new Bundle();
             bundle.putLong(GridActionFragment.PARAM_ADRESS, addressId);
             bundle.putString(GridActionFragment.PARAM_ADRESS_NAME, add);
             fragment.setArguments(bundle);
-            activity.addFragmentToBackStack(fragment);
-        } else
-            L.d("-----widget--" + addressId);
+            MainTabActivity.addFragmentToBackStack(fragment,widget.getContext());
+//        } else
+//            L.d("-----widget--" + addressId);
     }
 
     @Override

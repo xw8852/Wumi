@@ -108,6 +108,7 @@ public class TabHomeFragment extends BaseFragment {
         footer = new PageFooter(listView, mAdapter);
         listView.setAdapter(mAdapter);
         footer.setLoadMoreListener(moreListener);
+        footer.updateStatus(0,0);
     }
 
     @Override
@@ -232,8 +233,8 @@ public class TabHomeFragment extends BaseFragment {
             HomeItem item = getItem(position);
             IMApplication application = IMApplication.getApplication();
             application.displayImage(item.userInfo.userImg, headerHolder.userImg);
-            if(item.userInfo.uid==IMApplication.getApplication().getUserInfo().userId){
-                item.userInfo.userName=IMApplication.getApplication().getUserInfo().userName;
+            if (item.userInfo.uid == IMApplication.getApplication().getUserInfo().userId) {
+                item.userInfo.userName = IMApplication.getApplication().getUserInfo().userName;
             }
             headerHolder.userName.setText(item.userInfo.userName);
             headerHolder.userTime.setText(DateUtils.getActivityTime(item.creatTime));
@@ -256,8 +257,8 @@ public class TabHomeFragment extends BaseFragment {
             }
             holder = (Holder) convertView.getTag();
             final HomeItem item = getItem(position);
-            if(item.userInfo.uid==IMApplication.getApplication().getUserInfo().userId){
-                item.userInfo.userName=IMApplication.getApplication().getUserInfo().userName;
+            if (item.userInfo.uid == IMApplication.getApplication().getUserInfo().userId) {
+                item.userInfo.userName = IMApplication.getApplication().getUserInfo().userName;
             }
             IMApplication application = IMApplication.getApplication();
             application.displayImage(item.userInfo.userImg, holder.userImg);
@@ -272,9 +273,10 @@ public class TabHomeFragment extends BaseFragment {
             holder.desc.setVisibility(View.GONE);
             holder.goods.setOnClickListener(new LikeFragmentListener(item.id));
             holder.event.setVisibility(View.GONE);
-            if(item.event!=null){
+            if (item.event != null) {
                 SpannableStringBuilder builder = new SpannableStringBuilder(item.event.name);
                 builder.setSpan(new EventSpan(item.event), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.insert(0,"活动: ");
                 holder.event.setText(builder);
                 holder.event.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
                 holder.event.setVisibility(View.VISIBLE);
@@ -378,12 +380,11 @@ public class TabHomeFragment extends BaseFragment {
 
             @Override
             public void onClick(View v) {
-                MainTabActivity activity = (MainTabActivity) v.getContext();
                 GoodListFragment fragment = new GoodListFragment();
                 Bundle bundle = new Bundle();
                 bundle.putLong(GoodListFragment.PARAM_PO_ID, poid);
                 fragment.setArguments(bundle);
-                activity.addFragmentToBackStack(fragment);
+                MainTabActivity.addFragmentToBackStack(fragment,v.getContext());
 
             }
         }
@@ -462,17 +463,12 @@ public class TabHomeFragment extends BaseFragment {
 
         @Override
         public void onClick(View view) {
-            if (view.getContext() instanceof MainTabActivity) {
-                MainTabActivity activity = (MainTabActivity) view.getContext();
-                TabProfileFragment fragment = new TabProfileFragment();
-                Bundle bundle = new Bundle();
-                bundle.putLong(TabProfileFragment.PARAM_USER_ID, id);
-                bundle.putString(TabProfileFragment.PARAM_USER_NAME, name);
-                fragment.setArguments(bundle);
-                activity.addFragmentToBackStack(fragment);
-
-            } else
-                L.d("-----widget--" + name + "," + id);
+            TabProfileFragment fragment = new TabProfileFragment();
+            Bundle bundle = new Bundle();
+            bundle.putLong(TabProfileFragment.PARAM_USER_ID, id);
+            bundle.putString(TabProfileFragment.PARAM_USER_NAME, name);
+            fragment.setArguments(bundle);
+            MainTabActivity.addFragmentToBackStack(fragment, view.getContext());
         }
     }
 
@@ -557,12 +553,13 @@ public class TabHomeFragment extends BaseFragment {
         public SimpleEvent event;
     }
 
-    public static class SimpleEvent{
+    public static class SimpleEvent {
         @SerializedName("id")
         public long id;
         @SerializedName("name")
         public String name;
     }
+
     public static class Location {
         @SerializedName("loc_id")
         public long loc_id;

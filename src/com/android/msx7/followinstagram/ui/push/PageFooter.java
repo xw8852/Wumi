@@ -95,12 +95,12 @@ public class PageFooter {
 //            count += mListView.getHeaderViewsCount()+mListView.getFooterViewsCount();
             // 下拉到空闲时，且最后一个item的数等于数据的总数时，进行更新
             if (mLastItem >= count && scrollState == SCROLL_STATE_IDLE) {
-                if (isEndID && getNextPage() <= 0) {
+                if ( getNextPage() <= 0) {
                     //TODO: 加载到最后一页
 //                    ToastUtil.show(view.getContext(), R.string.is_end_page);
                     return;
                 }
-                if (!isEndID && totalPage > 0 && getNextPage() > totalPage) {
+                if (totalPage > 0 && getNextPage() > totalPage) {
 //                    ToastUtil.show(view.getContext(), R.string.is_end_page);
                     return;
                 }

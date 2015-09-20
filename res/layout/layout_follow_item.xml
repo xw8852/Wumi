@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:descendantFocusability="blocksDescendants"
     android:padding="@dimen/row_text_button_padding">
 
     <com.android.msx7.followinstagram.ui.image.CircleImageView
@@ -26,6 +26,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:textColor="@color/grey_4"
+            android:textSize="@dimen/font_small"
+            android:text=""
+            android:id="@+id/reply"
+            android:visibility="gone"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -42,11 +50,11 @@
 
         <Button
             android:id="@+id/btn_follow"
-            android:layout_width="@dimen/row_height"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:background="@drawable/follow_btn"
             android:padding="@dimen/row_text_button_padding"
-            android:text="@string/gofollow" />
+            android:text="@string/byfollow"
+            android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>

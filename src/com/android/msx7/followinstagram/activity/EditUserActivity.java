@@ -110,7 +110,6 @@ public class EditUserActivity extends ImageSelectActivity {
 
     void submit() {
         String chkcode = IMApplication.getApplication().getchkcode();
-        chkcode = java.net.URLDecoder.decode(chkcode);
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("type", "update");
         map.put("chkcode", chkcode);

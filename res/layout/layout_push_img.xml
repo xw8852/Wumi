@@ -46,22 +46,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="@dimen/row_text_padding">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/row_text_padding"
-                android:text="圈人" />
+                android:text="圈人"
+                android:textSize="@dimen/font_medium" />
 
             <TextView
                 android:id="@+id/people1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/row_text_padding"
+                android:paddingLeft="8dp"
                 android:text=""
                 android:textColor="@color/grey_3"
-                android:visibility="gone" />
+                android:textSize="@dimen/font_small"
+                android:visibility="visible" />
         </LinearLayout>
 
         <include layout="@layout/row_divider" />
@@ -79,21 +81,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="@dimen/row_text_padding">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/row_text_padding"
-                android:text="添加地点" />
+                android:text="添加地点"
+                android:textSize="@dimen/font_medium" />
 
             <TextView
                 android:id="@+id/address1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/row_text_padding"
+                android:paddingLeft="8dp"
                 android:text=""
                 android:textColor="@color/grey_3"
+                android:textSize="@dimen/font_small"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -111,21 +115,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="@dimen/row_text_padding">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/row_text_padding"
                 android:text="添加活动" />
 
             <TextView
                 android:id="@+id/action1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/row_text_padding"
+                android:paddingLeft="8dp"
                 android:text=""
                 android:textColor="@color/grey_3"
+                android:textSize="@dimen/font_small"
                 android:visibility="gone" />
         </LinearLayout>
 

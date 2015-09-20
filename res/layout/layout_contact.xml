@@ -7,6 +7,8 @@
 
     <include layout="@layout/title_bar" />
 
+    <include layout="@layout/layout_searchbar" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,14 +20,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:cacheColorHint="@color/transparent"
-            android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false"
-            android:divider="@color/grey_1_5"
-            android:dividerHeight="1dp"
+            android:divider="@color/transparent"
+            android:dividerHeight="@dimen/row_text_button_padding"
             android:listSelector="@color/transparent" />
 
-        <include
+        <TextView
+            android:layout_width="match_parent"
+            android:text=""
             android:id="@+id/pin_header"
-            layout="@layout/layout_home_pinned_header" />
+            android:background="@color/green_1"
+            android:textSize="@dimen/font_large"
+            android:padding="8dp"
+            android:layout_height="wrap_content" />
     </FrameLayout>
 </LinearLayout>

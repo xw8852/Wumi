@@ -36,16 +36,16 @@ public class TopicSpan extends URLSpan {
     @Override
     public void onClick(View widget) {
         if (click) return;
-        if (widget.getContext() instanceof MainTabActivity) {
-            MainTabActivity activity = (MainTabActivity) widget.getContext();
+//        if (widget.getContext() instanceof MainTabActivity) {
+//            MainTabActivity activity = (MainTabActivity) widget.getContext();
 //            TabHomeFragment fragment = new TabHomeFragment();
             GridActionFragment fragment = new GridActionFragment();
             Bundle bundle = new Bundle();
             bundle.putString(GridActionFragment.PARAM_TAG, name);
             fragment.setArguments(bundle);
-            activity.addFragmentToBackStack(fragment);
-        } else
-            L.d("-----widget--" + name);
+            MainTabActivity.addFragmentToBackStack(fragment,widget.getContext());
+//        } else
+//            L.d("-----widget--" + name);
     }
 
     @Override

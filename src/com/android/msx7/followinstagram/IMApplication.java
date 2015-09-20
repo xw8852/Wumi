@@ -54,9 +54,9 @@ public class IMApplication extends Application {
         application = this;
         initImageLoader(getApplicationContext());
         mDisplayImageOptions = new DisplayImageOptions.Builder().cacheInMemory(true)
-//                .showImageForEmptyUri(R.drawable.ic_photo)
-//                .showImageOnFail(R.drawable.ic_photo)
-//                .showImageOnLoading(R.drawable.ic_photo)
+                .showImageForEmptyUri(R.color.grey_1_5)
+                .showImageOnFail(R.color.grey_1_5)
+                .showImageOnLoading(R.color.grey_1_5)
                 .cacheOnDisk(true).build();
 
 
@@ -71,7 +71,7 @@ public class IMApplication extends Application {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("默认gcj02");//可选，默认gcj02，设置返回的定位结果坐标系，
-        int span = 10000;
+        int span = 1000 * 60;
 //        try {
 //            span = Integer.valueOf(frequence.getText().toString());
 //        } catch (Exception e) {
@@ -89,6 +89,7 @@ public class IMApplication extends Application {
     }
 
     public BDLocation location;
+
     /**
      * 实现实时位置回调监听
      */
@@ -96,7 +97,7 @@ public class IMApplication extends Application {
 
         @Override
         public void onReceiveLocation(BDLocation location) {
-            IMApplication.this.location=location;
+            IMApplication.this.location = location;
             //Receive Location
             StringBuffer sb = new StringBuffer(256);
             sb.append("time : ");

@@ -90,8 +90,8 @@ public class GridPoFragment extends BaseFragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MainTabActivity activity = (MainTabActivity) getView().getContext();
-                activity.addFragmentToBackStack(SinglePoFragment.getFragment(mAdapter.getItem(position).id));
+                MainTabActivity.addFragmentToBackStack(PageFragment.getFragment(mAdapter.getData(), position),view.getContext());
+//                MainTabActivity.addFragmentToBackStack(SinglePoFragment.getFragment(mAdapter.getItem(position).id),view.getContext());
             }
         });
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {

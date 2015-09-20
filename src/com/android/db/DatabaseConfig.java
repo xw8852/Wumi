@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.android.msx7.followinstagram.common.DBConn;
+
 /**
  * Created by XiaoWei on 2015/6/18.
  */
@@ -32,7 +34,8 @@ public class DatabaseConfig {
 
     public SQLiteOpenHelper getSQLiteOpenHelper(Context ctx) {
         if (conn == null) {
-            throw new IllegalArgumentException("you must call the method of  \"registerDatabase\" before");
+           registerDatabase(new DBConn());
+//            throw new IllegalArgumentException("you must call the method of  \"registerDatabase\" before");
         }
         return new SQLiteOpenHelper(new DatabaseContext(ctx, conn.getDBPath()), conn.getDBName(), null, conn.getDBVersion()) {
             @Override

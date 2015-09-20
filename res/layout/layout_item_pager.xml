@@ -5,7 +5,7 @@
     android:background="@color/black"
     android:orientation="vertical">
 
-    <uk.co.senab.photoview.PhotoView
+    <com.android.msx7.followinstagram.ui.image.PhotoImageView
         android:id="@+id/img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,7 +20,7 @@
         android:paddingBottom="3dp"
         android:paddingTop="3dp"
         android:background="#9934373b"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/good"
@@ -30,6 +30,8 @@
             android:drawableLeft="@drawable/feed_button_like"
             android:gravity="center_vertical"
             android:textColor="@color/white"
+            android:padding="5dp"
+            android:drawablePadding="5dp"
             android:text="" />
 
         <TextView
@@ -40,12 +42,18 @@
             android:drawableLeft="@drawable/feed_button_comment"
             android:gravity="center_vertical"
             android:textColor="@color/white"
+            android:drawablePadding="5dp"
+            android:padding="5dp"
             android:text="" />
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="1dp"/>
 
         <com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume
             android:id="@+id/address"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:drawableLeft="@drawable/feed_location"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/row_text_padding"
             android:gravity="right"

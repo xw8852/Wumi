@@ -51,12 +51,12 @@
 
                 <TextView
                     android:id="@+id/TitleText"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/font_large"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:minWidth="70dp" />
+                    android:minWidth="70dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_large" />
             </LinearLayout>
 
             <RelativeLayout
@@ -66,11 +66,11 @@
 
                 <TextView
                     android:id="@+id/RightText"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/font_large"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_large" />
 
                 <ImageView
                     android:id="@+id/RightImg"
@@ -83,6 +83,13 @@
 
             </RelativeLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_bar_height"></LinearLayout>
     </RelativeLayout>
 
 </merge>

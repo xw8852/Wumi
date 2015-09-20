@@ -200,9 +200,9 @@ public class CommentActivity extends BaseActivity {
                         footer.pushLoadMore();
                     }
                 }
-                if(mAdapter.getCount()==0){
+                if (mAdapter.getCount() == 0) {
                     findViewById(R.id.empty).setVisibility(View.VISIBLE);
-                }else findViewById(R.id.empty).setVisibility(View.GONE);
+                } else findViewById(R.id.empty).setVisibility(View.GONE);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -256,7 +256,6 @@ public class CommentActivity extends BaseActivity {
     };
 
 
-
     class CommentAdapter extends BaseAdapter<CommentItem> {
         public CommentAdapter(Context ctx, List<CommentItem> data) {
             super(ctx, data);
@@ -267,7 +266,7 @@ public class CommentActivity extends BaseActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, LayoutInflater inflater) {
+        public View getView(final int position, View convertView, LayoutInflater inflater) {
             Holder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.layout_comment_ac_item, null);
@@ -275,12 +274,14 @@ public class CommentActivity extends BaseActivity {
                 holder.profileImg = (ImageView) convertView.findViewById(R.id.profileImg);
                 holder.comment = (TextViewFixTouchConsume) convertView.findViewById(R.id.comment);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
+                holder.up = (TextView) convertView.findViewById(R.id.like);
                 convertView.setTag(holder);
             } else holder = (Holder) convertView.getTag();
-            CommentItem item = getItem(position);
+            final CommentItem item = getItem(position);
             IMApplication.getApplication().displayImage(item.cmtImage, holder.profileImg);
             holder.time.setText(DateUtils.getActivityTime(item.time));
             holder.comment.setText(item.detailList.reply);
+            holder.up.setText("" + item.upCount);
             SpannableStringBuilder builder = new SpannableStringBuilder("");
             if (item.detailList.uid > 0) {
                 builder = new SpannableStringBuilder("回复 ");
@@ -289,6 +290,41 @@ public class CommentActivity extends BaseActivity {
                 builder.setSpan(new NameSpan(item.detailList.name, item.detailList.uid), start, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builder.append(": ");
             }
+            holder.up.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HashMap<String, Object> map = new HashMap<String, Object>();
+                    map.put("type", "ding");
+                    map.put("i_cmt_id", item.id);
+                    map.put("i_po_id", item.poId);
+                    map.put("chkcode", IMApplication.getApplication().getchkcode());
+                    IMApplication.getApplication().runVolleyRequest(new BaseRequest(Request.Method.POST, YohoField.URL_COMMET, new Gson().toJson(map),
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    L.d(response);
+                                    dismissLoadingDialog();
+                                    BaseResponse re = new Gson().fromJson(response, BaseResponse.class);
+                                    if (re.retcode == 0) {
+                                        //TODO：攒点成功
+                                        ToastUtil.show("点赞成功");
+                                        item.upCount++;
+                                        data.remove(position);
+                                        data.add(position, item);
+                                        notifyDataSetChanged();
+                                    } else {
+                                        ToastUtil.show(re.showmsg);
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            dismissLoadingDialog();
+                            VolleyErrorUtils.showError(error);
+                        }
+                    }));
+                }
+            });
 //            String desc = item.detailList.reply;
 //
 //            String[] arr = StringsUtils.findString(desc);
@@ -321,6 +357,7 @@ public class CommentActivity extends BaseActivity {
             ImageView profileImg;
             TextViewFixTouchConsume comment;
             TextView time;
+            TextView up;
 
         }
     }
@@ -339,6 +376,8 @@ public class CommentActivity extends BaseActivity {
         public long poId;
         @SerializedName("i_creat_time")
         public long time;
+        @SerializedName("i_ding_count")
+        public long upCount;
         @SerializedName("s_cmt_uname")
         public String cmtName;
         @SerializedName("i_cmt_uid")

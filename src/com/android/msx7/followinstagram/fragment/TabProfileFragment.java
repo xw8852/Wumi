@@ -115,31 +115,28 @@ public class TabProfileFragment extends BaseFragment {
         mFansView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainTabActivity activity = (MainTabActivity) v.getContext();
                 FansListFragment fragment = new FansListFragment();
                 Bundle bundle = new Bundle();
                 bundle.putLong(FansListFragment.PARAM_USER_ID, userId);
                 fragment.setArguments(bundle);
-                activity.addFragmentToBackStack(fragment);
+                MainTabActivity.addFragmentToBackStack(fragment, v.getContext());
             }
         });
         mFollowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainTabActivity activity = (MainTabActivity) v.getContext();
                 FollowListFragment fragment = new FollowListFragment();
                 Bundle bundle = new Bundle();
                 bundle.putLong(FollowListFragment.PARAM_USER_ID, userId);
                 fragment.setArguments(bundle);
-                activity.addFragmentToBackStack(fragment);
+                MainTabActivity.addFragmentToBackStack(fragment, v.getContext());
             }
         });
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MainTabActivity activity = (MainTabActivity) getView().getContext();
-                activity.addFragmentToBackStack(SinglePoFragment.getFragment(mAdapter.getItem(position).id));
+                MainTabActivity.addFragmentToBackStack(PageFragment.getFragment(mAdapter.getData(), position), view.getContext());
             }
         });
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -255,14 +252,13 @@ public class TabProfileFragment extends BaseFragment {
     View.OnClickListener tagListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            MainTabActivity activity = (MainTabActivity) v.getContext();
             GridPoFragment fragment = new GridPoFragment();
             Bundle bundle = new Bundle();
             bundle.putLong(GridPoFragment.PARAM_USER_ID, userId);
             if (userId != IMApplication.getApplication().getUserInfo().userId)
                 bundle.putString(GridPoFragment.PARAM_USER_NAME, userName);
             fragment.setArguments(bundle);
-            activity.addFragmentToBackStack(fragment);
+            MainTabActivity.addFragmentToBackStack(fragment, v.getContext());
         }
     };
     PushHeader.OnRefreshListener onRefreshListener = new PushHeader.OnRefreshListener() {
@@ -292,9 +288,12 @@ public class TabProfileFragment extends BaseFragment {
                         mFansView.setText(getString(R.string.profile_fans, result.retbody.fanCount));
                         mFollowView.setText(getString(R.string.profile_follow, result.retbody.followCunt));
                         if (userId <= 0) {
-                            userId = result.retbody.uid;
+                            //没有userid不能取图片
                             header.onRefresh();
                         }
+                        userId = result.retbody.uid;
+                        userName = result.retbody.name;
+                        getTitleBar().setTitle(userName, null);
                         UserInfo userInfo = IMApplication.getApplication().getUserInfo();
                         if (userInfo.userId == result.retbody.uid) {
                             userInfo.s_introduce = result.retbody.s_introduce;

@@ -19,7 +19,7 @@
             android:headerDividersEnabled="false"
             android:background="@color/white"
             android:cacheColorHint="@color/transparent"
-            android:divider="@color/white"
+            android:divider="@color/grey_1_5"
             android:dividerHeight="1dp"
             android:listSelector="@color/transparent"></ListView>
 

@@ -38,21 +38,30 @@
             android:layout_marginLeft="@dimen/row_text_padding"
             android:src="@drawable/feed_button_comment" />
 
+        <View
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="1dp" />
+
         <com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume
             android:id="@+id/address"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:layout_marginRight="@dimen/row_text_padding"
+            android:drawableLeft="@drawable/feed_location"
             android:gravity="right"
             android:paddingBottom="3dp"
             android:paddingTop="3dp" />
     </LinearLayout>
+
     <com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume
         android:id="@+id/event"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/row_text_padding"
-        android:gravity="right"
+        android:gravity="left"
+        android:layout_marginLeft="@dimen/row_text_padding"
         android:paddingBottom="3dp"
         android:paddingTop="3dp" />
 

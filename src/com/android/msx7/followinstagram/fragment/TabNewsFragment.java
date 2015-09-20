@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,11 +71,6 @@ public class TabNewsFragment extends BaseFragment {
         footer.setLoadMoreListener(loadMoreListener);
         footer.updateStatus(0, 0);
         getTitleBar().setTitle("消息", null);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         header.onRefresh();
     }
 
@@ -133,6 +129,12 @@ public class TabNewsFragment extends BaseFragment {
         }));
     }
 
+    void hideTip() {
+        if (getView().getContext() instanceof MainTabActivity) {
+            ((MainTabActivity) getView().getContext()).hideTip();
+        }
+    }
+
     PageFooter.ILoadMoreListener loadMoreListener = new PageFooter.ILoadMoreListener() {
         @Override
         public void loadMore(final int nextPage) {
@@ -187,6 +189,7 @@ public class TabNewsFragment extends BaseFragment {
                 holder.profileImg = (ImageView) convertView.findViewById(R.id.profileImg);
                 holder.comment = (TextViewFixTouchConsume) convertView.findViewById(R.id.comment);
                 holder.btn = (TextView) convertView.findViewById(R.id.btn_follow);
+                holder.reply = (TextView) convertView.findViewById(R.id.reply);
                 holder.img = (ImageView) convertView.findViewById(R.id.img);
                 convertView.setTag(holder);
             } else holder = (Holder) convertView.getTag();
@@ -199,19 +202,23 @@ public class TabNewsFragment extends BaseFragment {
             }
             builder.append(" " + bean.j_detail.content);
             holder.comment.setText(builder);
+            holder.reply.setVisibility(View.GONE);
             holder.comment.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
             holder.btn.setVisibility(View.GONE);
             holder.img.setVisibility(View.GONE);
+            if (!TextUtils.isEmpty(bean.j_detail.reply)) {
+                holder.reply.setVisibility(View.VISIBLE);
+                holder.reply.setText(bean.j_detail.reply);
+            }
             holder.profileImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainTabActivity activity = (MainTabActivity) v.getContext();
                     TabProfileFragment fragment = new TabProfileFragment();
                     Bundle bundle = new Bundle();
                     bundle.putLong(TabProfileFragment.PARAM_USER_ID, bean.i_send_uid);
                     bundle.putString(TabProfileFragment.PARAM_USER_NAME, bean.userName);
                     fragment.setArguments(bundle);
-                    activity.addFragmentToBackStack(fragment);
+                    MainTabActivity.addFragmentToBackStack(fragment, v.getContext());
                 }
             });
             if (bean.j_detail.i_po_id > 0) {
@@ -220,8 +227,7 @@ public class TabNewsFragment extends BaseFragment {
                 holder.img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MainTabActivity activity = (MainTabActivity) v.getContext();
-                        activity.addFragmentToBackStack(SinglePoFragment.getFragment(bean.j_detail.i_po_id));
+                        MainTabActivity.addFragmentToBackStack(SinglePoFragment.getFragment(bean.j_detail.i_po_id), v.getContext());
                     }
                 });
             } else if ((bean.i_type == 112 || bean.i_type == 109) && bean.j_detail.i_activity_id > 0 &&
@@ -244,6 +250,7 @@ public class TabNewsFragment extends BaseFragment {
             ImageView profileImg;
             TextViewFixTouchConsume comment;
             TextView btn;
+            TextView reply;
             ImageView img;
 
         }
@@ -338,6 +345,7 @@ public class TabNewsFragment extends BaseFragment {
     }
 
     void sendClear() {
+
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("type", "clear");
         map.put("chkcode", IMApplication.getApplication().getchkcode());

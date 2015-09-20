@@ -25,6 +25,7 @@ public class TitleView extends LinearLayout {
     TextView mTitleText;
     LinearLayout mMiddleSpace;
     LinearLayout mTitleSpace;
+    LinearLayout mConatiner;
 
     public TitleView(Context context) {
         super(context);
@@ -51,10 +52,14 @@ public class TitleView extends LinearLayout {
         mTitleText = (TextView) findViewById(R.id.TitleText);
         mMiddleSpace = (LinearLayout) findViewById(R.id.MiddleSpace);
         mTitleSpace = (LinearLayout) findViewById(R.id.TitleSpace);
+        mConatiner = (LinearLayout) findViewById(R.id.container);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         setOrientation(VERTICAL);
     }
 
+    public LinearLayout getContainer() {
+        return mConatiner;
+    }
 
     public ImageView getLeftImg() {
         return mLeftImg;

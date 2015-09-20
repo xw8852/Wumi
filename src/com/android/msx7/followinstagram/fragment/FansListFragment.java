@@ -77,13 +77,13 @@ public class FansListFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (id >= 0 ) {
                     FollowBean bean = mAdapter.getItem((int) id);
-                    MainTabActivity activity = (MainTabActivity) view.getContext();
+
                     TabProfileFragment fragment = new TabProfileFragment();
                     Bundle bundle = new Bundle();
                     bundle.putLong(TabProfileFragment.PARAM_USER_ID, bean.fanUid);
                     bundle.putString(TabProfileFragment.PARAM_USER_NAME, bean.userName);
                     fragment.setArguments(bundle);
-                    activity.addFragmentToBackStack(fragment);
+                    MainTabActivity.addFragmentToBackStack(fragment,view.getContext());
                 }
             }
         });

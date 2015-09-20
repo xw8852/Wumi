@@ -154,6 +154,7 @@ public class SinglePoFragment extends BaseFragment {
         if (item.event != null) {
             SpannableStringBuilder builder = new SpannableStringBuilder(item.event.name);
             builder.setSpan(new EventSpan(item.event), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.insert(0,"活动: ");
             holder.event.setText(builder);
             holder.event.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
             holder.event.setVisibility(View.VISIBLE);
@@ -256,12 +257,11 @@ public class SinglePoFragment extends BaseFragment {
 
         @Override
         public void onClick(View v) {
-            MainTabActivity activity = (MainTabActivity) v.getContext();
             GoodListFragment fragment = new GoodListFragment();
             Bundle bundle = new Bundle();
             bundle.putLong(GoodListFragment.PARAM_PO_ID, poid);
             fragment.setArguments(bundle);
-            activity.addFragmentToBackStack(fragment);
+            MainTabActivity.addFragmentToBackStack(fragment,v.getContext());
 
         }
     }
@@ -277,16 +277,13 @@ public class SinglePoFragment extends BaseFragment {
 
         @Override
         public void onClick(View view) {
-            if (view.getContext() instanceof MainTabActivity) {
-                MainTabActivity activity = (MainTabActivity) view.getContext();
-                TabProfileFragment fragment = new TabProfileFragment();
-                Bundle bundle = new Bundle();
-                bundle.putLong(TabProfileFragment.PARAM_USER_ID, id);
-                bundle.putString(TabProfileFragment.PARAM_USER_NAME, name);
-                fragment.setArguments(bundle);
-                activity.addFragmentToBackStack(fragment);
-            } else
-                L.d("-----widget--" + name + "," + id);
+
+            TabProfileFragment fragment = new TabProfileFragment();
+            Bundle bundle = new Bundle();
+            bundle.putLong(TabProfileFragment.PARAM_USER_ID, id);
+            bundle.putString(TabProfileFragment.PARAM_USER_NAME, name);
+            fragment.setArguments(bundle);
+            MainTabActivity.addFragmentToBackStack(fragment, view.getContext());
         }
     }
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -59,23 +60,22 @@ public class EventListActivity extends BaseActivity {
         footer = new PageFooter(mListView, mAdapter);
         footer.setLoadMoreListener(moreListener);
         getTitleBar().setTitle("活动", null);
-        getTitleBar().setLeftBtn("新建", addEventListener);
+        getTitleBar().setRightBtn("新建", addEventListener);
         footer.updateStatus(0, 0);
 //        mListView.setBackgroundResource(R.color.grey_1);
 //        mListView.setDivider(new ColorDrawable(0xffedeeee));
         mListView.setSelector(new ColorDrawable(getResources().getColor(R.color.accent_blue_light)));
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setAdapter(mAdapter);
-        getTitleBar().setRightBtn("确定", new View.OnClickListener() {
+        addBack();
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                L.d("MSG", mListView.getSelectedItemPosition() + "," + mListView.getSelectedItemId());
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (id < 0) return;
+                position = (int) id;
                 Intent intent = new Intent();
-                if (mAdapter.getCount() > 0 && mListView.getCheckedItemPosition() > 0) {
-                    int postion = Math.max(0, mListView.getCheckedItemPosition() - mListView.getHeaderViewsCount());
-                    EventBean eventBean = mAdapter.getItem(postion);
-                    intent.putExtra("data", new Gson().toJson(eventBean));
-                }
+                EventBean eventBean = mAdapter.getItem(position);
+                intent.putExtra("data", new Gson().toJson(eventBean));
                 setResult(RESULT_OK, intent);
                 finish();
             }

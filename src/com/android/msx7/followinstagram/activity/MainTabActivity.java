@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,22 +12,34 @@ import android.util.Pair;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.db.DatabaseConfig;
 import com.android.layoutlib.bridge.bars.TitleBar;
+import com.android.msx7.followinstagram.IMApplication;
 import com.android.msx7.followinstagram.common.BaseFragment;
+import com.android.msx7.followinstagram.common.BaseResponse;
+import com.android.msx7.followinstagram.common.YohoField;
 import com.android.msx7.followinstagram.fragment.TabHomeFragment;
 import com.android.msx7.followinstagram.fragment.TabNewsFragment;
 import com.android.msx7.followinstagram.fragment.TabProfileFragment;
 import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.common.DBConn;
+import com.android.msx7.followinstagram.net.BaseRequest;
 import com.android.msx7.followinstagram.ui.drawable.DockDrawable;
 import com.android.msx7.followinstagram.util.L;
 import com.android.msx7.followinstagram.util.ToastUtil;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.widget.TitleView;
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -37,7 +50,7 @@ public class MainTabActivity extends ImageSelectActivity implements View.OnClick
     ImageView mDockNews;
     ImageView mDockProfile;
     ImageView mDockCamera;
-
+    TextView tip;
     SparseArray<Fragment> sparseArray = new SparseArray<Fragment>();
     Fragment mCurFragment;
 
@@ -60,10 +73,61 @@ public class MainTabActivity extends ImageSelectActivity implements View.OnClick
         onClick(mDockHome);
         //注册数据库
         DatabaseConfig.getInstance().registerDatabase(new DBConn());
+        tip = (TextView) findViewById(R.id.tip);
+        loadTips();
+    }
+
+    public void hideTip() {
+        tip.setText("");
+        tip.setVisibility(View.GONE);
+    }
+
+    void loadTips() {
+
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("type", "count");
+        map.put("chkcode", IMApplication.getApplication().getchkcode());
+        IMApplication.getApplication().runVolleyRequest(new BaseRequest(Request.Method.POST, YohoField.URL_MESSAGE, new Gson().toJson(map), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                BaseResponse<MsgDATA> re = new Gson().fromJson(response, new TypeToken<BaseResponse<MsgDATA>>() {
+                }.getType());
+                if (re.retcode == 0) {
+                    if (re.retbody.i_unread_count > 0) {
+                        tip.setVisibility(View.VISIBLE);
+                        tip.setText("" + re.retbody.i_unread_count);
+                    } else
+                        tip.setVisibility(View.GONE);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                loadFalse = true;
+            }
+        }));
+    }
+
+    boolean loadFalse;
+
+    class MsgDATA {
+        @SerializedName("i_recv_uid")
+        public long i_recv_uid;
+        @SerializedName("i_unread_count")
+        public int i_unread_count;
+
     }
 
     @Override
     public void onClick(View v) {
+        if (v.getId() == R.id.camera) {
+            showMenu();
+            return;
+        }
+        if (loadFalse && v.getId() != R.id.message) {
+            loadFalse = false;
+            loadTips();
+        }
         mDockHome.setSelected(false);
         mDockNews.setSelected(false);
         mDockProfile.setSelected(false);
@@ -71,6 +135,8 @@ public class MainTabActivity extends ImageSelectActivity implements View.OnClick
         findViewById(R.id.tab_news_container).setVisibility(View.GONE);
         findViewById(R.id.tab_profile_container).setVisibility(View.GONE);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if (mCurFragment != null)
+            ft.hide(mCurFragment);
         if (v.getId() == R.id.home) {
             mDockHome.setSelected(true);
             if (sparseArray.get(R.id.home) == null) {
@@ -101,35 +167,19 @@ public class MainTabActivity extends ImageSelectActivity implements View.OnClick
             mCurFragment = sparseArray.get(R.id.profile);
             findViewById(R.id.tab_profile_container).setVisibility(View.VISIBLE);
         }
-        if (v.getId() == R.id.camera) {
-            showMenu();
-        }
+
         ft.commit();
     }
+
 
     List<String> pofileTags = new ArrayList<String>();
     List<String> homeTags = new ArrayList<String>();
     List<String> newsTags = new ArrayList<String>();
     int fragmentIndex;
 
-    public void addFragmentToBackStack(Fragment fragment) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        String popName = fragment.getClass().getName() + "_" + fragmentIndex;
-        fragmentIndex++;
-        if (mDockProfile.isSelected()) {
-            pofileTags.add(popName);
-            ft.add(R.id.tab_profile_container, fragment);
-        } else if (mDockHome.isSelected()) {
-            homeTags.add(popName);
-            ft.add(R.id.tab_home_container, fragment);
-        } else if (mDockNews.isSelected()) {
-            newsTags.add(popName);
-            ft.add(R.id.tab_news_container, fragment);
-        }
-        ft.hide(mCurFragment);
-        ft.addToBackStack(popName);
-        ft.commitAllowingStateLoss();
-        mCurFragment = fragment;
+    public static final void addFragmentToBackStack(Fragment fragment, Context ctx) {
+        EmptyActivity.startFragment(fragment);
+        ctx.startActivity(new Intent("com.android.msx7.followinstagram.emptyActivty"));
     }
 
     @Override

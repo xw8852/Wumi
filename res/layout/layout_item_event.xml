@@ -18,10 +18,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
-            android:padding="5dp"
+            android:paddingTop="5dp"
+            android:paddingLeft="5dp"
             android:singleLine="true"
             android:text=""
-            android:textSize="@dimen/font_large" />
+            android:textSize="@dimen/font_medium" />
 
         <TextView
             android:id="@+id/type"
@@ -41,5 +42,5 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:textColor="@color/grey_4"
-        android:textSize="@dimen/font_medium" />
+        android:textSize="@dimen/font_small" />
 </LinearLayout>

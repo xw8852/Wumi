@@ -4,7 +4,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.msx7.followinstagram.IMApplication;
@@ -23,51 +21,58 @@ import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.activity.ImgFindUserActivity.SimpleContact;
 import com.android.msx7.followinstagram.activity.MainTabActivity;
 import com.android.msx7.followinstagram.fragment.TabProfileFragment;
-import com.android.msx7.followinstagram.util.L;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by Josn on 2015/9/16.
  */
-public class ContactImageView extends FrameLayout {
+public class PhotoImageView extends FrameLayout {
     FrameLayout frames;
 
-    public ContactImageView(Context context) {
+    public PhotoImageView(Context context) {
         super(context);
         init();
     }
 
-    public ContactImageView(Context context, AttributeSet attrs) {
+    public PhotoImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public ContactImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PhotoImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    public ContactImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public PhotoImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    ImageView mImageView;
+    PhotoView mImageView;
+    PhotoViewAttacher mAttacher;
 
     void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.layout_contact_image, this);
-        mImageView = (ImageView) findViewById(R.id.img);
+        LayoutInflater.from(getContext()).inflate(R.layout.layout_contact_image2, this);
+        mImageView = (PhotoView) findViewById(R.id.PhotoView);
+    }
+
+    public PhotoView getPhotoView() {
+        return mImageView;
     }
 
     int bitmapWidth, bitmapHeight;
     List<SimpleContact> contactList = new ArrayList<SimpleContact>();
 
     public void setUrl(String url, List<SimpleContact> list) {
+        mAttacher = new PhotoViewAttacher(mImageView);
         contactList.clear();
         listView2.clear();
         if (list == null) list = new ArrayList<SimpleContact>();
@@ -75,7 +80,6 @@ public class ContactImageView extends FrameLayout {
         for (View view : listViews) {
             view.setVisibility(View.GONE);
         }
-        mImageView.setBackgroundColor(0xffe6e6e6);
         IMApplication.getApplication().displayImage(url, mImageView, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
@@ -89,18 +93,20 @@ public class ContactImageView extends FrameLayout {
 
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                mImageView.setImageBitmap(bitmap);
+                mAttacher.update();
                 bitmapWidth = bitmap.getWidth();
                 bitmapHeight = bitmap.getHeight();
-                DisplayMetrics dm = getResources().getDisplayMetrics();
-                int _width = dm.widthPixels;
-                int _height = _width * bitmapHeight / bitmapWidth;
-                ViewGroup.LayoutParams params = mImageView.getLayoutParams();
-                params.width = _width;
-                params.height = _height;
-                bitmapHeight = params.height;
-                bitmapWidth = params.width;
-                mImageView.setLayoutParams(params);
-                addTag();
+//                DisplayMetrics dm = getResources().getDisplayMetrics();
+//                int _width = dm.widthPixels;
+//                int _height = _width * bitmapHeight / bitmapWidth;
+//                ViewGroup.LayoutParams params = mImageView.getLayoutParams();
+//                params.width = _width;
+//                params.height = _height;
+//                bitmapHeight = params.height;
+//                bitmapWidth = params.width;
+//                mImageView.setLayoutParams(params);
+//                addTag();
             }
 
             @Override
@@ -154,7 +160,7 @@ public class ContactImageView extends FrameLayout {
                     public void onClick(View v) {
                         TabProfileFragment fragment = new TabProfileFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putLong(TabProfileFragment.PARAM_USER_ID,contact.userId);
+                        bundle.putLong(TabProfileFragment.PARAM_USER_ID, contact.userId);
                         fragment.setArguments(bundle);
                         MainTabActivity.addFragmentToBackStack(fragment, v.getContext());
                     }
@@ -166,10 +172,15 @@ public class ContactImageView extends FrameLayout {
 //            ViewHelper.setTranslationX(view, bitmapHeight / Float.valueOf(postion[1]));
 //            ViewHelper.setTranslationY(view,  bitmapWidth / Float.valueOf(postion[0]));
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            params.leftMargin = (int) (bitmapWidth / Float.valueOf(postion[0]) + 20 * getResources().getDisplayMetrics().density);
+            params.leftMargin = (int) (bitmapWidth / Float.valueOf(postion[0]));
             params.topMargin = (int) (mImageView.getTop() + bitmapHeight / Float.valueOf(postion[1]));
             view.setLayoutParams(params);
+
         }
+        ViewGroup.LayoutParams params = mImageView.getLayoutParams();
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        mImageView.setLayoutParams(params);
     }
 
 

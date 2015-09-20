@@ -110,8 +110,7 @@ public class GridActionFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                MainTabActivity activity = (MainTabActivity) getView().getContext();
-                activity.addFragmentToBackStack(PageFragment.getFragment(mAdapter.getData(), position));
+                MainTabActivity.addFragmentToBackStack(PageFragment.getFragment(mAdapter.getData(), position), view.getContext());
             }
         });
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -140,14 +139,12 @@ public class GridActionFragment extends BaseFragment {
         if (list != null && !list.isEmpty()) {
             eventBean = list.get(0);
             if (eventBean != null) {
-                getTitleBar().setTitle(eventBean.name + "(" + eventBean.poCount + ")", null);
                 if (!TextUtils.isEmpty(eventBean.desc)) {
                     desc.setVisibility(View.VISIBLE);
                     getView().findViewById(R.id.descInfo).setVisibility(View.VISIBLE);
                     desc.setText(eventBean.desc);
                     setSendPic();
                 }
-                return;
             }
         }
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -156,6 +153,7 @@ public class GridActionFragment extends BaseFragment {
         Response.Listener<String> listener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                L.d("活动："+response);
                 BaseResponse<EventBean> re = new Gson().fromJson(response, new TypeToken<BaseResponse<EventBean>>() {
                 }.getType());
                 if (re.retcode != 0) {

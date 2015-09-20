@@ -30,13 +30,36 @@
         android:padding="10dp"
         android:src="@drawable/dock_camera" />
 
-    <ImageView
-        android:id="@+id/news"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:padding="10dp"
-        android:src="@drawable/btn_dock_news" />
+
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/news"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:src="@drawable/btn_dock_news" />
+        <TextView
+            android:layout_width="18dp"
+            android:minWidth="15dp"
+            android:minHeight="15dp"
+            android:layout_height="18dp"
+            android:layout_gravity="right|top"
+            android:id="@+id/tip"
+            android:visibility="gone"
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="12dp"
+            android:gravity="center"
+            android:textSize="@dimen/font_xsmall"
+            android:textColor="@color/white"
+            android:background="@drawable/roud_circle_rect"
+             />
+    </FrameLayout>
+
 
     <ImageView
         android:id="@+id/profile"
