@@ -104,12 +104,14 @@ public class TabNewsFragment extends BaseFragment {
                 }.getType());
                 header.onRefreshComplete();
                 footer.updateStatus(0, 0);
+
                 if (result.retbody != null && !result.retbody.isEmpty() && result.retbody.size() >= 10)
                     footer.updateStatus(0, 1);
                 if (result.retcode != 0) {
                     ToastUtil.show(result.showmsg);
                 } else {
                     sendClear();
+                    hideTip();
                     mAdapter.changeData(result.retbody);
                     if (mListView.getLastVisiblePosition() - mListView.getHeaderViewsCount() > 10) {
                         footer.pushLoadMore();
@@ -181,7 +183,7 @@ public class TabNewsFragment extends BaseFragment {
         }
 
         @Override
-        public View getView(int position, View convertView, LayoutInflater inflater) {
+        public View getView(final int position, View convertView, LayoutInflater inflater) {
             Holder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.layout_follow_item, null);
@@ -243,6 +245,46 @@ public class TabNewsFragment extends BaseFragment {
                     }
                 });
             }
+            if (bean.i_relation > -1 && bean.i_relation < 2 && bean.i_type == 107) {
+                holder.btn.setVisibility(View.VISIBLE);
+                holder.btn.setText(R.string.gofollow);
+                holder.btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showLoadingDialog(-1);
+                        HashMap<String, Object> map = new HashMap<String, Object>();
+                        map.put("type", "insert");
+                        map.put("i_follow_uid", bean.i_send_uid);
+                        map.put("chkcode", IMApplication.getApplication().getchkcode());
+                        IMApplication.getApplication().runVolleyRequest(new BaseRequest(Request.Method.POST, YohoField.URL_FOLLOW, new Gson().toJson(map), new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                L.d(response);
+                                dismissLoadingDialog();
+                                BaseResponse re = new Gson().fromJson(response, BaseResponse.class);
+                                if (re.retcode == 0 || re.retcode == 7) {
+                                    ToastUtil.show("关注成功");
+                                    data.remove(position);
+                                    bean.i_relation = 2;
+                                    data.add(position, bean);
+                                    mAdapter.notifyDataSetChanged();
+                                } else ToastUtil.show(re.showmsg);
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                dismissLoadingDialog();
+                                VolleyErrorUtils.showError(error);
+                            }
+                        }));
+                    }
+                });
+            } else if (bean.i_relation > -1 && bean.i_type == 107) {
+                holder.btn.setVisibility(View.VISIBLE);
+                holder.btn.setText(R.string.byfollow);
+                holder.btn.setSelected(true);
+                holder.btn.setOnClickListener(null);
+            } else holder.btn.setVisibility(View.GONE);
             return convertView;
         }
 
@@ -387,9 +429,11 @@ public class TabNewsFragment extends BaseFragment {
         //发送者UID
         @SerializedName("i_send_uid")
         public int i_send_uid;
+        //0-表示未关注，1表示单向，2表示互相关注
+        public int i_relation;
         //接受者UID
         @SerializedName("i_recv_uid")
-        public long i_recv_uid;
+        public long i_recv_uid = -1;
         //        消息产生时间
         @SerializedName("i_creat_time")
         public long i_creat_time;

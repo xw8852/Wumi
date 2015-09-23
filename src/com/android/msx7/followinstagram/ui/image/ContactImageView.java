@@ -24,6 +24,8 @@ import com.android.msx7.followinstagram.activity.ImgFindUserActivity.SimpleConta
 import com.android.msx7.followinstagram.activity.MainTabActivity;
 import com.android.msx7.followinstagram.fragment.TabProfileFragment;
 import com.android.msx7.followinstagram.util.L;
+import com.android.msx7.followinstagram.util.ViewUtils;
+import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
@@ -75,6 +77,12 @@ public class ContactImageView extends FrameLayout {
         for (View view : listViews) {
             view.setVisibility(View.GONE);
         }
+        if (contactList.isEmpty()) {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_img_tag, null);
+            view.setVisibility(View.INVISIBLE);
+            addView(view);
+            listViews.add(view);
+        }
         mImageView.setBackgroundColor(0xffe6e6e6);
         IMApplication.getApplication().displayImage(url, mImageView, new ImageLoadingListener() {
             @Override
@@ -101,6 +109,7 @@ public class ContactImageView extends FrameLayout {
                 bitmapWidth = params.width;
                 mImageView.setLayoutParams(params);
                 addTag();
+
             }
 
             @Override
@@ -127,11 +136,10 @@ public class ContactImageView extends FrameLayout {
     void addTag() {
 
         for (int i = 0; i < contactList.size(); i++) {
+            L.d("FACE___VIEW_________" + new Gson().toJson(contactList));
             final SimpleContact contact = contactList.get(i);
-            if (TextUtils.isEmpty(contact.position)) continue;
-            String[] postion = contact.position.split("ABCD");
-            if (postion == null || postion.length != 2 || TextUtils.isEmpty(postion[0]) || TextUtils.isEmpty(postion[1]))
-                continue;
+            if (contact.centerX <= 0) return;
+
             View view = null;
             if (i < listViews.size()) {
                 view = listViews.get(i);
@@ -154,7 +162,7 @@ public class ContactImageView extends FrameLayout {
                     public void onClick(View v) {
                         TabProfileFragment fragment = new TabProfileFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putLong(TabProfileFragment.PARAM_USER_ID,contact.userId);
+                        bundle.putLong(TabProfileFragment.PARAM_USER_ID, contact.userId);
                         fragment.setArguments(bundle);
                         MainTabActivity.addFragmentToBackStack(fragment, v.getContext());
                     }
@@ -166,8 +174,17 @@ public class ContactImageView extends FrameLayout {
 //            ViewHelper.setTranslationX(view, bitmapHeight / Float.valueOf(postion[1]));
 //            ViewHelper.setTranslationY(view,  bitmapWidth / Float.valueOf(postion[0]));
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            params.leftMargin = (int) (bitmapWidth / Float.valueOf(postion[0]) + 20 * getResources().getDisplayMetrics().density);
-            params.topMargin = (int) (mImageView.getTop() + bitmapHeight / Float.valueOf(postion[1]));
+
+//            params.leftMargin = (int) (bitmapWidth / Float.valueOf(postion[0]) + 20 * getResources().getDisplayMetrics().density);
+//            params.topMargin = (int) (mImageView.getTop() + bitmapHeight / Float.valueOf(postion[1]));
+//            if (contact.x > -1) {
+//            }
+            view.setLayoutParams(params);
+            ViewUtils.measureView(view);
+            float left = (bitmapWidth * contact.centerX - (view.getMeasuredWidth() / 2));
+            float right = (bitmapHeight * contact.y);
+            params.leftMargin = (int) left;
+            params.topMargin = (int) right;
             view.setLayoutParams(params);
         }
     }

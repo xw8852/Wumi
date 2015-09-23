@@ -21,6 +21,7 @@ import com.android.msx7.followinstagram.activity.AddressActvity.AddressLocation;
 import com.android.msx7.followinstagram.activity.ImgFindUserActivity.SimpleContact;
 import com.android.msx7.followinstagram.bean.EventBean;
 import com.android.msx7.followinstagram.common.BaseActivity;
+import com.android.msx7.followinstagram.common.BaseResponse;
 import com.android.msx7.followinstagram.net.PoRequest;
 import com.android.msx7.followinstagram.ui.login.BackActionButtonDrawable;
 import com.android.msx7.followinstagram.ui.pic.UploadPic;
@@ -59,6 +60,7 @@ public class ShareImageActivity extends ImageSelectActivity {
     TextView address1;
     TextView action1;
     TextView people1;
+    TextView people2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class ShareImageActivity extends ImageSelectActivity {
         address1 = (TextView) findViewById(R.id.address1);
         action1 = (TextView) findViewById(R.id.action1);
         people1 = (TextView) findViewById(R.id.people1);
+        people2 = (TextView) findViewById(R.id.people2);
         path = getIntent().getStringExtra(PARAM_IMG_PATH);
 //        path = Uri.decode(Uri.fromFile(new File(path)).toString());
         if (getIntent().hasExtra("EVENT")) {
@@ -216,6 +219,7 @@ public class ShareImageActivity extends ImageSelectActivity {
             if (!data.hasExtra("data")) {
                 quanList = null;
                 people1.setVisibility(View.GONE);
+                people2.setVisibility(View.GONE);
                 return;
             }
             String _data = data.getStringExtra("data");
@@ -223,10 +227,18 @@ public class ShareImageActivity extends ImageSelectActivity {
             quanList = new Gson().fromJson(_data, new TypeToken<ArrayList<SimpleContact>>() {
             }.getType());
             if (quanList != null && !quanList.isEmpty()) {
-                people1.setText("已圈出"+quanList.size()+"人");
+                String text = "";
+                for (SimpleContact contact : quanList) {
+                    text += contact.name + "  ";
+                }
+                people1.setText("已圈出" + quanList.size() + "人");
+                people2.setText(text);
                 people1.setVisibility(View.VISIBLE);
-            } else
+                people2.setVisibility(View.VISIBLE);
+            } else {
                 people1.setVisibility(View.GONE);
+                people2.setVisibility(View.GONE);
+            }
         } else if (resultCode == RESULT_OK && requestCode == ADDRESS && data != null) {
             if (!data.hasExtra("data")) {
                 mAddressLocation = null;
@@ -352,9 +364,14 @@ public class ShareImageActivity extends ImageSelectActivity {
             @Override
             public void onResponse(String response) {
                 dismissLoadingDialog();
-                finish();
-                IMApplication.getApplication().mLocationClient.stop();
                 L.d("ShareImageActivity-----" + response);
+                BaseResponse res = new Gson().fromJson(response, BaseResponse.class);
+                if (res.retcode == 0) {
+                    finish();
+                    IMApplication.getApplication().mLocationClient.stop();
+                } else {
+                    ToastUtil.show(res.showmsg);
+                }
             }
         }, new Response.ErrorListener() {
             @Override

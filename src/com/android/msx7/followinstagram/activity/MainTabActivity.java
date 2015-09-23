@@ -41,6 +41,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Josn on 2015/9/9.
@@ -75,6 +77,30 @@ public class MainTabActivity extends ImageSelectActivity implements View.OnClick
         DatabaseConfig.getInstance().registerDatabase(new DBConn());
         tip = (TextView) findViewById(R.id.tip);
         loadTips();
+        setTask();
+    }
+
+    Timer timer;
+
+    void setTask() {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadTips();
+                    }
+                });
+            }
+        }, 3000, 3000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timer.cancel();
     }
 
     public void hideTip() {
@@ -83,7 +109,6 @@ public class MainTabActivity extends ImageSelectActivity implements View.OnClick
     }
 
     void loadTips() {
-
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("type", "count");
         map.put("chkcode", IMApplication.getApplication().getchkcode());
@@ -123,10 +148,6 @@ public class MainTabActivity extends ImageSelectActivity implements View.OnClick
         if (v.getId() == R.id.camera) {
             showMenu();
             return;
-        }
-        if (loadFalse && v.getId() != R.id.message) {
-            loadFalse = false;
-            loadTips();
         }
         mDockHome.setSelected(false);
         mDockNews.setSelected(false);

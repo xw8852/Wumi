@@ -185,7 +185,16 @@ public class ImgFindUserActivity extends BaseActivity {
                         Tag _tag = (Tag) _tmp;
                         SimpleContact contact = _tag.simpleContact;
                         if (contact == null) continue;
-                        contact.position = bitmapWidth / (_tag.getX()) + "ABCD" + bitmapHeight / (_tag.getY() - img.getTop());
+                        float wCenter = _tag.getWidth() / 2.0f;
+                        contact.x = _tag.getX() / bitmapWidth;
+                        contact.centerX = (_tag.getX() + wCenter) / bitmapWidth;
+                        contact.y = (_tag.getY() - img.getTop()) / bitmapHeight;
+                        Rect rect = new Rect();
+                        _tag.getHitRect(rect);
+                        L.d("__________FACE___" + new Gson().toJson(contact));
+                        L.d("____bitmap_____FACE___" + bitmapWidth + "," + bitmapHeight);
+                        L.d("____bitmap_____FACE___" + _tag.getX() + "," + _tag.getY());
+                        L.d("______TAG__FACE____" + rect + _tag.getWidth());
                         arrs.add(contact);
                     }
                 }
@@ -223,24 +232,25 @@ public class ImgFindUserActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (listView.getVisibility() == View.VISIBLE) {
-            showActionBar();
-            return;
-        }
-        List<SimpleContact> arrs = new ArrayList<SimpleContact>();
-        int count = frameLayout.getChildCount();
-        for (int i = 0; i < count; i++) {
-            View _tmp = frameLayout.getChildAt(i);
-            if (_tmp instanceof Tag) {
-                Tag _tag = (Tag) _tmp;
-                SimpleContact contact = _tag.simpleContact;
-                if (contact == null) continue;
-                contact.position = bitmapWidth / _tag.getX() + "ABCD" + bitmapHeight / _tag.getY();
-                arrs.add(contact);
-            }
-        }
+//        if (listView.getVisibility() == View.VISIBLE) {
+//            showActionBar();
+//            return;
+//        }
+//        List<SimpleContact> arrs = new ArrayList<SimpleContact>();
+//        int count = frameLayout.getChildCount();
+//        for (int i = 0; i < count; i++) {
+//            View _tmp = frameLayout.getChildAt(i);
+//            if (_tmp instanceof Tag) {
+//                Tag _tag = (Tag) _tmp;
+//                SimpleContact contact = _tag.simpleContact;
+//                if (contact == null) continue;
+//                contact.x = bitmapWidth / (_tag.getX() - img.getLeft());
+//                contact.y = bitmapHeight / (_tag.getY() - img.getTop());
+//                arrs.add(contact);
+//            }
+//        }
         Intent intent = new Intent();
-        intent.putExtra("data", new Gson().toJson(arrs));
+//        intent.putExtra("data", new Gson().toJson(arrs));
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -313,19 +323,17 @@ public class ImgFindUserActivity extends BaseActivity {
                 if (!quanList.isEmpty()) {
                     for (SimpleContact contact : quanList) {
                         // contact.position = bitmapWidth / _tag.getX() + "ABCD" + bitmapHeight / _tag.getY();
-                        if (TextUtils.isEmpty(contact.position)) continue;
-                        String[] postion = contact.position.split("ABCD");
-                        if (postion == null || postion.length != 2 || TextUtils.isEmpty(postion[0]) || TextUtils.isEmpty(postion[1]))
-                            continue;
+                        if (!(contact.x >= 0 && contact.x <= 1)) continue;
+
                         Tag tag = new Tag(ImgFindUserActivity.this);
                         ViewUtils.measureView(tag);
                         int width = tag.getMeasuredWidth();
                         FrameLayout.LayoutParams layout = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        layout.leftMargin = (int) (bitmapWidth / Float.valueOf(postion[0]));
+                        layout.leftMargin = (int) (bitmapWidth * contact.x);
                         if (layout.leftMargin + width > getResources().getDisplayMetrics().widthPixels) {
                             layout.leftMargin = getResources().getDisplayMetrics().widthPixels - width;
                         }
-                        layout.topMargin = (int) (img.getTop() + (bitmapHeight / Float.valueOf(postion[1])));
+                        layout.topMargin = (int) (img.getTop() + bitmapHeight * contact.y);
                         L.d("TOP---" + img.getTop());
                         L.d("TOP---" + img.getHeight() + "," + bitmapHeight);
                         tag.setText(contact);
@@ -428,7 +436,14 @@ public class ImgFindUserActivity extends BaseActivity {
         @SerializedName("position")
         public String position;
         @SerializedName("i_user_id")
-        public long userId=-1;
+        public long userId = -1;
+        @SerializedName("x")
+        public float x = -1;
+        @SerializedName("y")
+        public float y = -1;
+        @SerializedName("centerX")
+        public float centerX;
+
         public SimpleContact() {
         }
 
@@ -508,8 +523,6 @@ public class ImgFindUserActivity extends BaseActivity {
                     case MotionEvent.ACTION_MOVE:
                         float distanceX = last_x - event.getRawX();
                         float distanceY = last_y - event.getRawY();
-                        if (Math.abs(distanceX) < 2 || Math.abs(distanceY) < 2)
-                            return true;
                         float nextY = v.getY() - distanceY;
                         float nextX = v.getX() - distanceX;
 
