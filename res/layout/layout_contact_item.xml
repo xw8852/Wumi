@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/action_bar_height"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/pin_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green_1"
+        android:padding="8dp"
+        android:text=""
+        android:textSize="@dimen/font_large" />
+
+    <TextView
+        android:id="@+id/action_bar_button_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingBottom="12dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="12dp"
+        android:textColor="@color/grey_medium"
+        android:textSize="@dimen/font_large" />
+</LinearLayout>

@@ -25,6 +25,7 @@ import com.android.msx7.followinstagram.fragment.TabNewsFragment;
 import com.android.msx7.followinstagram.fragment.TabProfileFragment;
 import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.common.DBConn;
+import com.android.msx7.followinstagram.fragment.TabSearchFragment;
 import com.android.msx7.followinstagram.net.BaseRequest;
 import com.android.msx7.followinstagram.ui.drawable.DockDrawable;
 import com.android.msx7.followinstagram.util.L;
@@ -49,6 +50,7 @@ import java.util.TimerTask;
  */
 public class MainTabActivity extends ImageSelectActivity implements View.OnClickListener {
     ImageView mDockHome;
+    ImageView mDockSearch;
     ImageView mDockNews;
     ImageView mDockProfile;
     ImageView mDockCamera;
@@ -61,14 +63,17 @@ public class MainTabActivity extends ImageSelectActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mDockHome = (ImageView) findViewById(R.id.home);
+        mDockSearch = (ImageView) findViewById(R.id.search);
         mDockNews = (ImageView) findViewById(R.id.news);
         mDockProfile = (ImageView) findViewById(R.id.profile);
         mDockCamera = (ImageView) findViewById(R.id.camera);
         mDockHome.setBackgroundDrawable(new DockDrawable(getResources().getColor(R.color.grey_5), getResources().getColor(R.color.grey_7)));
+        mDockSearch.setBackgroundDrawable(new DockDrawable(getResources().getColor(R.color.grey_5), getResources().getColor(R.color.grey_7)));
         mDockNews.setBackgroundDrawable(new DockDrawable(getResources().getColor(R.color.grey_5), getResources().getColor(R.color.grey_7)));
         mDockProfile.setBackgroundDrawable(new DockDrawable(getResources().getColor(R.color.grey_5), getResources().getColor(R.color.grey_7)));
         mDockCamera.setBackgroundDrawable(new DockDrawable(getResources().getColor(R.color.accent_blue_6), getResources().getColor(R.color.accent_blue_5)));
         mDockHome.setOnClickListener(this);
+        mDockSearch.setOnClickListener(this);
         mDockNews.setOnClickListener(this);
         mDockCamera.setOnClickListener(this);
         mDockProfile.setOnClickListener(this);
@@ -94,7 +99,7 @@ public class MainTabActivity extends ImageSelectActivity implements View.OnClick
                     }
                 });
             }
-        }, 3000, 3000);
+        }, 3000, 1000 * 60 * 3);
     }
 
     @Override
@@ -150,6 +155,7 @@ public class MainTabActivity extends ImageSelectActivity implements View.OnClick
             return;
         }
         mDockHome.setSelected(false);
+        mDockSearch.setSelected(false);
         mDockNews.setSelected(false);
         mDockProfile.setSelected(false);
         findViewById(R.id.tab_home_container).setVisibility(View.GONE);
@@ -168,6 +174,17 @@ public class MainTabActivity extends ImageSelectActivity implements View.OnClick
             mCurFragment = sparseArray.get(R.id.home);
             findViewById(R.id.tab_home_container).setVisibility(View.VISIBLE);
         }
+        if (v.getId() == R.id.search) {
+            mDockSearch.setSelected(true);
+            if (sparseArray.get(R.id.search) == null) {
+                sparseArray.append(R.id.search, new TabSearchFragment());
+                ft.add(R.id.tab_search_container, sparseArray.get(R.id.search));
+            }
+            ft.show(sparseArray.get(R.id.search));
+            mCurFragment = sparseArray.get(R.id.search);
+            findViewById(R.id.tab_home_container).setVisibility(View.VISIBLE);
+        }
+
         if (v.getId() == R.id.news) {
             mDockNews.setSelected(true);
             if (sparseArray.get(R.id.news) == null) {

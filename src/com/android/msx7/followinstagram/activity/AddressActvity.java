@@ -142,7 +142,10 @@ public class AddressActvity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() == 0 || s.toString().trim().length() == 0) showDefault();
+                if (s.length() == 0 || s.toString().trim().length() == 0) {
+                    showDefault();
+                    clear.setVisibility(View.GONE);
+                } else clear.setVisibility(View.VISIBLE);
             }
         });
     }

@@ -4,10 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,6 +33,9 @@ import com.android.msx7.followinstagram.common.YohoField;
 import com.android.msx7.followinstagram.net.BaseRequest;
 import com.android.msx7.followinstagram.ui.push.PageFooter;
 import com.android.msx7.followinstagram.ui.push.PushHeader;
+import com.android.msx7.followinstagram.ui.span.NameSpan;
+import com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume;
+import com.android.msx7.followinstagram.util.DateUtils;
 import com.android.msx7.followinstagram.util.L;
 import com.android.msx7.followinstagram.util.RequestGsonUtils;
 import com.android.msx7.followinstagram.util.ToastUtil;
@@ -34,6 +48,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +63,10 @@ public class EventListActivity extends BaseActivity {
     ListView mListView;
     TextView mEmptyView;
     EventAdpater mAdapter;
+
+    EditText editText;
+    TextView btn;
+    View clear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +99,89 @@ public class EventListActivity extends BaseActivity {
                 finish();
             }
         });
+
+        View view = getLayoutInflater().inflate(R.layout.layout_searchbar, null);
+        ((ViewGroup) mListView.getParent().getParent()).addView(view, 1);
+        btn = (TextView) view.findViewById(R.id.clear);
+        clear = view.findViewById(R.id.delete);
+        btn.setText("搜索");
+        editText = (EditText) view.findViewById(R.id.action_bar_search_edit_text);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(editText.getText().toString()) || editText.getText().toString().trim().length() == 0) {
+                    ToastUtil.show("请输入需要搜索的关键词");
+                    return;
+                }
+                hideKeyboard();
+                startSearch();
+            }
+        });
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (TextUtils.isEmpty(editText.getText().toString()) || editText.getText().toString().trim().length() == 0) {
+                    ToastUtil.show("请输入需要搜索的关键词");
+                    return false;
+                }
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    hideKeyboard();
+                    startSearch();
+                }
+                return false;
+            }
+        });
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editText.setText("");
+            }
+        });
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0 || s.toString().trim().length() == 0) {
+                    showDefault();
+                    clear.setVisibility(View.GONE);
+                }else clear.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
+
+    void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0); //强制隐藏键盘
+    }
+
+    void startSearch() {
+        type = "search";
+        showLoadingDialog(-1);
+        sendRequest();
+    }
+
+    void showDefault() {
+        type = "list";
+        showLoadingDialog(-1);
+        sendRequest();
+    }
+    void sendRequest(){
+        mHeader.onRefresh();
+    }
     @Override
     protected void onResume() {
         super.onResume();
-        mHeader.onRefresh();
+        sendRequest();
     }
 
     View.OnClickListener addEventListener = new View.OnClickListener() {
@@ -103,14 +199,17 @@ public class EventListActivity extends BaseActivity {
             finish();
         }
     }
+    String type="list";
+
 
     PushHeader.OnRefreshListener refreshListener = new PushHeader.OnRefreshListener() {
         @Override
         public void onRefresh() {
             HashMap<String, Object> map = new HashMap<String, Object>();
-            map.put("type", "list");
+            map.put("type", type);
             map.put("chkcode", IMApplication.getApplication().getchkcode());
             map.put("pageno", 0);
+            map.put("s_keyword", editText.getText().toString());
             IMApplication.getApplication().runVolleyRequest(
                     new BaseRequest(Request.Method.POST, YohoField.URL_ACTIVITY, new Gson().toJson(map),
                             new Response.Listener<String>() {
@@ -118,6 +217,7 @@ public class EventListActivity extends BaseActivity {
                                 public void onResponse(String response) {
                                     L.d(response);
                                     mHeader.onRefreshComplete();
+                                    dismissLoadingDialog();
                                     BaseResponse<List<EventBean>> re = new Gson().fromJson(response, new TypeToken<BaseResponse<List<EventBean>>>() {
                                     }.getType());
                                     if (re.retcode != 0) {
@@ -139,6 +239,7 @@ public class EventListActivity extends BaseActivity {
                             }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            dismissLoadingDialog();
                             mHeader.onRefreshComplete();
                             VolleyErrorUtils.showError(error);
                         }
@@ -161,9 +262,10 @@ public class EventListActivity extends BaseActivity {
         @Override
         public void loadMore(int nextPage) {
             HashMap<String, Object> map = new HashMap<String, Object>();
-            map.put("type", "list");
+            map.put("type", type);
             map.put("chkcode", IMApplication.getApplication().getchkcode());
             map.put("pageno", mAdapter.getCount() / 10);
+            map.put("s_keyword", editText.getText().toString());
             IMApplication.getApplication().runVolleyRequest(
                     new BaseRequest(Request.Method.POST, YohoField.URL_ACTIVITY, new Gson().toJson(map),
                             new Response.Listener<String>() {
@@ -171,6 +273,7 @@ public class EventListActivity extends BaseActivity {
                                 public void onResponse(String response) {
                                     L.d(response);
                                     mHeader.onRefreshComplete();
+                                    dismissLoadingDialog();
                                     BaseResponse<List<EventBean>> re = new Gson().fromJson(response, new TypeToken<BaseResponse<List<EventBean>>>() {
                                     }.getType());
                                     if (re.retcode != 0) {
@@ -190,6 +293,7 @@ public class EventListActivity extends BaseActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             mHeader.onRefreshComplete();
+                            dismissLoadingDialog();
                             VolleyErrorUtils.showError(error);
                             int page = mAdapter.getCount() / 10 - 1;
                             page = Math.max(0, page);
@@ -220,11 +324,18 @@ public class EventListActivity extends BaseActivity {
                 holder.name = (TextView) convertView.findViewById(R.id.eventName);
                 holder.type = (TextView) convertView.findViewById(R.id.type);
                 holder.desc = (TextView) convertView.findViewById(R.id.eventDesc);
+                holder.creatName = (TextViewFixTouchConsume) convertView.findViewById(R.id.userInfo);
                 convertView.setTag(holder);
             }
             holder = (Holder) convertView.getTag();
             EventBean bean = getItem(position);
             holder.name.setText(bean.name);
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+            builder.append(bean.s_creat_uname);
+            builder.setSpan(new NameSpan(bean.s_creat_uname, bean.uid), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.append("\t" + new SimpleDateFormat("yyyy-MM-dd").format(bean.creatTime));
+            holder.creatName.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
+            holder.creatName.setText(builder);
             holder.desc.setText(bean.desc);
             if (bean.status == 0) {
                 holder.type.setText("公开");
@@ -237,7 +348,8 @@ public class EventListActivity extends BaseActivity {
         TextView name;
         TextView type;
         TextView desc;
-
+        ImageView img;
+        TextViewFixTouchConsume creatName;
     }
 
 

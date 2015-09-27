@@ -271,6 +271,7 @@ public class TabProfileFragment extends BaseFragment {
             else map.put("s_user_name", userName);
             map.put("need_counter", 1);
             map.put("need_relation", 1);
+            map.put("chkcode",IMApplication.getApplication().getchkcode());
             IMApplication application = IMApplication.getApplication();
             application.runVolleyRequest(new UserRequest(Request.Method.GET, new Gson().toJson(map), new Response.Listener<String>() {
                 @Override
@@ -288,6 +289,7 @@ public class TabProfileFragment extends BaseFragment {
                         mFansView.setText(getString(R.string.profile_fans, result.retbody.fanCount));
                         mFollowView.setText(getString(R.string.profile_follow, result.retbody.followCunt));
                         if (userId <= 0) {
+                            userId = result.retbody.uid;
                             //没有userid不能取图片
                             header.onRefresh();
                         }
@@ -299,6 +301,13 @@ public class TabProfileFragment extends BaseFragment {
                             userInfo.s_introduce = result.retbody.s_introduce;
                             userInfo.sex = result.retbody.sex;
                             IMApplication.getApplication().saveUserInfo(userInfo);
+                        }
+                        if (follow.getVisibility() == View.VISIBLE) {
+                            if (result.retbody.i_relation > 0) {
+                                follow.setText(R.string.byfollow);
+                                follow.setOnClickListener(null);
+                                follow.setSelected(true);
+                            }
                         }
                     }
                 }
@@ -355,7 +364,10 @@ public class TabProfileFragment extends BaseFragment {
     }
 
     public void getMoreInfo() {
-        if (userId < 0) return;
+        if (userId < 0) {
+            header.onRefreshComplete();
+            return;
+        }
         page = -1;
         final HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("type", "pobyta");
@@ -427,6 +439,8 @@ public class TabProfileFragment extends BaseFragment {
         public String s_introduce;
         @SerializedName("i_sex")
         public int sex;
+        @SerializedName("i_relation")
+        public int i_relation = -1;
     }
 
 
@@ -453,5 +467,6 @@ public class TabProfileFragment extends BaseFragment {
             return imageView;
         }
     }
+
 
 }

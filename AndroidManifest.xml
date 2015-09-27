@@ -117,12 +117,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AddressActvity"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.EditUserActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.EventListActivity"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AddEventActivity"

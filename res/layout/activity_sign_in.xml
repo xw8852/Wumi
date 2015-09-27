@@ -17,7 +17,7 @@
 
         <include layout="@layout/action_bar"/>
 
-        <ImageView
+        <com.android.msx7.followinstagram.ui.image.CircleImageView
             android:id="@+id/RegImg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

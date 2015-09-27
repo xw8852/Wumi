@@ -198,8 +198,11 @@ public class GridActionFragment extends BaseFragment {
                     }.insertOrUpdate(eventBean);
                 } else if (re.retcode == 502) {
                     setApply();
+                    ToastUtil.show(re.showmsg);
                 } else if (re.retcode == 503) {
                     setApply();
+                    ToastUtil.show(re.showmsg);
+                }else{
                     ToastUtil.show(re.showmsg);
                 }
             }
@@ -237,6 +240,8 @@ public class GridActionFragment extends BaseFragment {
                         }.getType());
                         if (re.retcode == 0) {
                             ToastUtil.show("发送申请成功");
+                        }else{
+                            ToastUtil.show(re.showmsg);
                         }
                     }
                 }, errorListener));

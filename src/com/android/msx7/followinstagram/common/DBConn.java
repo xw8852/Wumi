@@ -36,6 +36,8 @@ public class DBConn implements DatabaseConfig.IDatabaseConn {
             case 4:
                 db.execSQL(new BaseTable<ActionDB>(IMApplication.getApplication()) {
                 }.getCreateTableInfo());
+            case 5:
+                db.execSQL("ALTER TABLE `db_event` ADD `s_creat_uname` text ;");
         }
     }
 
@@ -51,6 +53,6 @@ public class DBConn implements DatabaseConfig.IDatabaseConn {
 
     @Override
     public int getDBVersion() {
-        return 5;
+        return 6;
     }
 }

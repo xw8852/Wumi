@@ -4,43 +4,69 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:minHeight="@dimen/action_bar_height"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@color/grey_1_5"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/action_bar_height"
+        android:orientation="vertical"
+        android:padding="5dp">
 
-        <TextView
-            android:id="@+id/eventName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:paddingTop="5dp"
-            android:paddingLeft="5dp"
-            android:singleLine="true"
-            android:text=""
-            android:textSize="@dimen/font_medium" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/eventName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:singleLine="true"
+                android:text=""
+                android:textSize="@dimen/font_medium" />
+
+            <TextView
+                android:id="@+id/type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:text="公开"
+                android:textColor="@color/accent_blue_medium"
+                android:textSize="@dimen/font_medium" />
+        </LinearLayout>
+
+        <com.android.msx7.followinstagram.ui.text.TextViewFixTouchConsume
+            android:id="@+id/userInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="@color/grey_medium"
+            android:textSize="@dimen/font_small" />
 
         <TextView
-            android:id="@+id/type"
-            android:layout_width="wrap_content"
+            android:id="@+id/eventDesc"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
             android:padding="5dp"
-            android:singleLine="true"
-            android:text="公开"
-            android:textColor="@color/accent_blue_medium"
-            android:textSize="@dimen/font_medium" />
+            android:textColor="@color/grey_4"
+            android:textSize="@dimen/font_small" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/eventDesc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textColor="@color/grey_4"
-        android:textSize="@dimen/font_small" />
 </LinearLayout>

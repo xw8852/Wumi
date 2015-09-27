@@ -356,6 +356,7 @@ public class ShareImageActivity extends ImageSelectActivity {
         if (!TextUtils.isEmpty(desc.getText().toString())) {
             map2.put("s_desc", desc.getText().toString());
         }
+        map2.put("s_device", Build.MODEL);
         map2.put("chkcode", IMApplication.getApplication().getchkcode());
         //                RequestGsonUtils.getGson(new Pair<String, String>("type", "insert"),
 //                        new Pair<String, String>("chkcode", IMApplication.getApplication().getchkcode()),

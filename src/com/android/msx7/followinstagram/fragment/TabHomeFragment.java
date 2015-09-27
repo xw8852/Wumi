@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.msx7.followinstagram.BuildConfig;
 import com.android.msx7.followinstagram.IMApplication;
 import com.android.msx7.followinstagram.R;
 import com.android.msx7.followinstagram.activity.CommentActivity;
@@ -108,7 +109,7 @@ public class TabHomeFragment extends BaseFragment {
         footer = new PageFooter(listView, mAdapter);
         listView.setAdapter(mAdapter);
         footer.setLoadMoreListener(moreListener);
-        footer.updateStatus(0,0);
+        footer.updateStatus(0, 0);
     }
 
     @Override
@@ -276,7 +277,7 @@ public class TabHomeFragment extends BaseFragment {
             if (item.event != null) {
                 SpannableStringBuilder builder = new SpannableStringBuilder(item.event.name);
                 builder.setSpan(new EventSpan(item.event), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                builder.insert(0,"活动: ");
+                builder.insert(0, "活动: ");
                 holder.event.setText(builder);
                 holder.event.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
                 holder.event.setVisibility(View.VISIBLE);
@@ -336,8 +337,11 @@ public class TabHomeFragment extends BaseFragment {
                 SpannableStringBuilder builder = new SpannableStringBuilder();
                 for (ZanItem zan : item.zans) {
                     int start = builder.length();
-                    builder.append(zan.name);
+                    builder.append(zan.name + ",");
                     builder.setSpan(new NameSpan(zan.name, zan.userId), start, start + zan.name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                if (builder.length() > 0) {
+                    builder = builder.delete(builder.length() - 1, builder.length());
                 }
                 Paint paint = new Paint();
                 paint.setTextSize(holder.goodNames.getTextSize());
@@ -384,7 +388,7 @@ public class TabHomeFragment extends BaseFragment {
                 Bundle bundle = new Bundle();
                 bundle.putLong(GoodListFragment.PARAM_PO_ID, poid);
                 fragment.setArguments(bundle);
-                MainTabActivity.addFragmentToBackStack(fragment,v.getContext());
+                MainTabActivity.addFragmentToBackStack(fragment, v.getContext());
 
             }
         }

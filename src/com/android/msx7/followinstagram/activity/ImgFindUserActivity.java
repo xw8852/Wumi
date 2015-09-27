@@ -217,16 +217,6 @@ public class ImgFindUserActivity extends BaseActivity {
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0); //强制隐藏键盘
     }
 
-    public void showSearch() {
-//        startActivity(new Intent(this, ContactActivity.class));
-        listView.setVisibility(View.VISIBLE);
-        getTitleBar().setVisibility(View.GONE);
-        searchView.setVisibility(View.VISIBLE);
-        editText.setText("");
-        editText.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);   //显示键盘
-    }
 
     SimpleAdapter mAdapter;
 
@@ -292,7 +282,7 @@ public class ImgFindUserActivity extends BaseActivity {
                     ViewUtils.measureView(tag);
                     int width = tag.getMeasuredWidth();
                     FrameLayout.LayoutParams layout = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    layout.leftMargin = (int) e.getX();
+                    layout.leftMargin = (int) e.getX() - width / 2;
                     if (layout.leftMargin + width > getResources().getDisplayMetrics().widthPixels) {
                         layout.leftMargin = getResources().getDisplayMetrics().widthPixels - width;
                     }
@@ -444,6 +434,23 @@ public class ImgFindUserActivity extends BaseActivity {
         @SerializedName("centerX")
         public float centerX;
 
+        //  # 姓名首字母
+        @SerializedName("s_firstchar")
+        public String s_firstchar;
+        //# 姓名每个汉子的首字母
+        @SerializedName("s_pinyin_abs")
+        public String s_pinyin_abs;
+        // # 姓名全拼
+        @SerializedName("s_pinyin")
+        public String s_pinyin;
+        //# 姓名
+        @SerializedName("s_ctt_uname")
+        public String s_ctt_uname;
+        //# 格式化后的电话号码
+        @SerializedName("i_ctt_telno")
+        public String i_ctt_telno;
+
+
         public SimpleContact() {
         }
 
@@ -451,6 +458,29 @@ public class ImgFindUserActivity extends BaseActivity {
             this.name = name;
             this.phone = phone;
         }
+    }
+
+    public void showSearch() {
+        startActivityForResult(new Intent(this, ContactActivity.class), 100);
+//        listView.setVisibility(View.VISIBLE);
+//        getTitleBar().setVisibility(View.GONE);
+//        searchView.setVisibility(View.VISIBLE);
+//        editText.setText("");
+//        editText.requestFocus();
+//        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);   //显示键盘
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null && data.hasExtra("data")) {
+            SimpleContact contact = new Gson().fromJson(data.getStringExtra("data"), SimpleContact.class);
+            contact.name = contact.s_ctt_uname;
+            contact.phone = contact.i_ctt_telno;
+            if (currentTag != null) currentTag.setText(contact);
+        }
+        currentTag = null;
     }
 
     Tag currentTag;
@@ -486,6 +516,7 @@ public class ImgFindUserActivity extends BaseActivity {
                 }
             });
         }
+
 
         public void setText(SimpleContact simpleContact) {
             this.simpleContact = simpleContact;

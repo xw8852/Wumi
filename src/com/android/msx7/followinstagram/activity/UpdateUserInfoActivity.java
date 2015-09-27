@@ -250,7 +250,7 @@ public class UpdateUserInfoActivity extends ImageSelectActivity {
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inSampleSize = 1;
                     Bitmap bitmap = BitmapFactory.decodeFile(mTargetFileUri.getEncodedPath(), options);
-                    bitmap = getCroppedBitmap(bitmap, Math.min(bitmap.getHeight(), bitmap.getWidth()));
+//                    bitmap = getCroppedBitmap(bitmap, Math.min(bitmap.getHeight(), bitmap.getWidth()));
 //                    String _path=mTargetFileUri.getEncodedPath();
 //                    _path.replace(".jpg",".png");
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(mTargetFileUri.getEncodedPath()));

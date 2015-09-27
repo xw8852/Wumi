@@ -38,4 +38,9 @@ public class EventBean {
     @SerializedName("s_desc")
     public String desc;
 
+    @DatabaseField("s_creat_uname")
+    @SerializedName("s_creat_uname")
+    public String s_creat_uname;
+    @SerializedName("s_activity_image")
+    public  String s_activity_image;
 }

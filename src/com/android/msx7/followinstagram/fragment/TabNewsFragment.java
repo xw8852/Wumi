@@ -206,6 +206,7 @@ public class TabNewsFragment extends BaseFragment {
             holder.comment.setText(builder);
             holder.reply.setVisibility(View.GONE);
             holder.comment.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
+            holder.btn.setSelected(false);
             holder.btn.setVisibility(View.GONE);
             holder.img.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(bean.j_detail.reply)) {
@@ -232,10 +233,10 @@ public class TabNewsFragment extends BaseFragment {
                         MainTabActivity.addFragmentToBackStack(SinglePoFragment.getFragment(bean.j_detail.i_po_id), v.getContext());
                     }
                 });
-            } else if ((bean.i_type == 112 || bean.i_type == 109) && bean.j_detail.i_activity_id > 0 &&
-                    // 查询本地数据库是否对进行过此操作
-                    !new ActionDB.ActionDatabase(inflater.getContext()).hasRead(bean.i_message_id)) {
-                //type 112表示申请 type 111表示操作结果
+            } else if (bean.i_type == 109 && bean.j_detail.i_activity_id > 0 ) {
+                //&&
+                // 查询本地数据库是否对进行过此操作
+//                !new ActionDB.ActionDatabase(inflater.getContext()).hasRead(bean.i_message_id)
                 holder.btn.setVisibility(View.VISIBLE);
                 holder.btn.setText("通过");
                 holder.btn.setOnClickListener(new View.OnClickListener() {
@@ -244,6 +245,22 @@ public class TabNewsFragment extends BaseFragment {
                         DialogUtils.ShowDialog("活动申请", bean.j_detail.content, "通过", new PassListener(bean), "否决", new NoPassListener(bean), v.getContext());
                     }
                 });
+            }
+            /**
+             * # 申请已处理
+             # T_MESSAGE_ACTIVITY_APPLY_PASS     = 112
+             # 申请已拒接
+             # T_MESSAGE_ACTIVITY_APPLY_FAIL     = 113
+             */if (bean.i_type == 112) {
+                holder.btn.setOnClickListener(null);
+                holder.btn.setText("已通过");
+                holder.btn.setVisibility(View.VISIBLE);
+                holder.btn.setSelected(true);
+            } else if (bean.i_type == 113) {
+                holder.btn.setVisibility(View.VISIBLE);
+                holder.btn.setText("已拒绝");
+                holder.btn.setOnClickListener(null);
+                holder.btn.setSelected(true);
             }
             if (bean.i_relation > -1 && bean.i_relation < 2 && bean.i_type == 107) {
                 holder.btn.setVisibility(View.VISIBLE);
@@ -284,7 +301,7 @@ public class TabNewsFragment extends BaseFragment {
                 holder.btn.setText(R.string.byfollow);
                 holder.btn.setSelected(true);
                 holder.btn.setOnClickListener(null);
-            } else holder.btn.setVisibility(View.GONE);
+            }
             return convertView;
         }
 

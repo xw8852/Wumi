@@ -19,8 +19,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:padding="10dp"
-        android:src="@drawable/btn_dock_search"
-        android:visibility="gone" />
+        android:src="@drawable/btn_dock_search" />
 
     <ImageView
         android:id="@+id/camera"

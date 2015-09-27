@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -85,11 +87,33 @@ public class CommentActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                String desc = s.toString();
+
+                String[] arr = StringsUtils.findString(desc);
+                if (arr != null) {
+                    int start = 0;
+                    int lastEnd = 0;
+                    for (String _arr : arr) {
+                        start = desc.indexOf(_arr, start);
+                        int end = _arr.length();
+                        if (end == 1) continue;
+                        if (start < 0) start = lastEnd;
+                        if (_arr.startsWith("@")) {
+                            s.setSpan(new NameSpan(_arr.substring(1).trim(), -1), start, start + end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        } else if (_arr.startsWith("#")) {
+                            String topic = _arr.substring(1).trim();
+                            s.setSpan(new TopicSpan(topic), start, start + end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
+                        lastEnd = end;
+                        start = end;
+                    }
+                }
                 if (s.length() == 0)
                     mShareBtn.setEnabled(false);
                 else mShareBtn.setEnabled(true);
             }
         });
+
 
 
 //        mListView = (SwipeListView) findViewById(R.id.swipeListView);
@@ -280,7 +304,8 @@ public class CommentActivity extends BaseActivity {
             final CommentItem item = getItem(position);
             IMApplication.getApplication().displayImage(item.cmtImage, holder.profileImg);
             holder.time.setText(DateUtils.getActivityTime(item.time));
-            holder.comment.setText(item.detailList.reply);
+
+
             holder.up.setText("" + item.upCount);
             SpannableStringBuilder builder = new SpannableStringBuilder("");
             if (item.detailList.uid > 0) {
@@ -290,6 +315,7 @@ public class CommentActivity extends BaseActivity {
                 builder.setSpan(new NameSpan(item.detailList.name, item.detailList.uid), start, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builder.append(": ");
             }
+
             holder.up.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -347,7 +373,30 @@ public class CommentActivity extends BaseActivity {
 //                }
 //            }
 
-            builder.append(item.detailList.reply);
+            //评论内容添加@
+            if (!TextUtils.isEmpty(item.detailList.reply)) {
+                holder.comment.setText(item.detailList.reply);
+                holder.comment.setVisibility(View.VISIBLE);
+                SpannableStringBuilder builder2 = new SpannableStringBuilder(item.detailList.reply);
+                L.d("---- " + Arrays.toString(StringsUtils.findString(item.detailList.reply)));
+                String[] arr = StringsUtils.findString(item.detailList.reply);
+                if (arr != null) {
+                    int start = 0;
+                    int lastEnd = 0;
+                    for (String _arr : arr) {
+                        start = item.detailList.reply.indexOf(_arr, start);
+                        int end = _arr.length();
+                        if (end == 1) continue;
+                        if (start < 0) start = lastEnd;
+                        if (_arr.startsWith("@")) {
+                            builder2.setSpan(new NameSpan(_arr.substring(1).trim(), -1), start, start + end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
+                        start = end;
+                        lastEnd = end;
+                    }
+                }
+                builder.append(builder2);
+            }
             holder.comment.setText(builder);
             holder.comment.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
             return convertView;

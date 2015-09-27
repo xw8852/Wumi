@@ -175,12 +175,12 @@ public class LoginFragment extends BaseFragment {
     };
 
     void showPasswordMode(int state) {
-        mNextView.setVisibility(View.INVISIBLE);
+//        mNextView.setVisibility(View.INVISIBLE);
         mProgressView.setVisibility(View.INVISIBLE);
-        mForgetView.setVisibility(View.INVISIBLE);
+//        mForgetView.setVisibility(View.INVISIBLE);
         switch (state) {
             case MODE_FORGOT:
-                mForgetView.setVisibility(View.VISIBLE);
+//                mForgetView.setVisibility(View.VISIBLE);
                 break;
             case MODE_NEXT:
                 mNextView.setVisibility(View.VISIBLE);

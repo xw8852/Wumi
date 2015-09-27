@@ -56,7 +56,7 @@ public class IMApplication extends Application {
         mDisplayImageOptions = new DisplayImageOptions.Builder().cacheInMemory(true)
                 .showImageForEmptyUri(R.color.grey_1_5)
                 .showImageOnFail(R.color.grey_1_5)
-                .showImageOnLoading(R.color.grey_1_5)
+//                .showImageOnLoading(R.color.grey_1_5)
                 .cacheOnDisk(true).build();
 
 
